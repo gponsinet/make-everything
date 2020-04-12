@@ -6,16 +6,14 @@ include $(dir $(brew.mk))/global/system.mk
 
 ifdef $(or $(global/system/linux), $(global/system/darwin))
 
-brew/deps := \
-	yarn
+ifdef global/system/linux
+brew/path := /home/linuxbrew/.linuxbrew
+else ifdef global/system/darwin
+brew/path := /usr/local/homebrew
+endif
 
 .PHONY: brew/setup
-ifdef global/system/linux
-brew/setup := /home/linuxbrew/.linuxbrew/bin/brew
-endif
-ifdef global/system/darwin
-brew/setup := /usr/local/homebrew/bin/brew
-endif
+brew/setup := $(brew/path)/bin/brew
 $(brew/setup):
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 brew/setup: $(brew/setup)
@@ -25,23 +23,17 @@ brew/setup: $(brew/setup)
 brew/trash:
 	ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 
-brew/install := $(patsubst %,brew/install/%,$(brew/deps))
-ifdef global/system/linux
-/home/linuxbrew/.linuxbrew/Cellar/%:
+.PHONY: brew/install/%
+brew/install := $(brew/path)/Cellar
+$(brew/install)/%: $(brew/setup)
 	brew install $*
-$(brew/install): brew/install/%: /home/linuxbrew/.linuxbrew/Cellar/%
-endif
-ifdef global/system/darwin
-/usr/local/homebrew/Cellar/%:
-	brew install $*
-$(brew/install): brew/install/%: /usr/local/homebrew/Cellar/%
-endif
-.PHONY: $(brew/install)
+	touch $(brew/path)/Cellar/*
+brew/install/%:
+	$(MAKE) $(brew/install)/$*
 
-brew/uninstall := $(patsubst %,brew/uninstall/%,$(brew/deps))
-.IGNORE \
-.PHONY: $(brew/uninstall)
-$(brew/uninstall): brew/uninstall/%:
+.IGNORE: brew/uninstall/%
+.PHONY: brew/uninstall/%
+brew/uninstall/%:
 	brew uninstall $*
 
 endif # global/system.mk

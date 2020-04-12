@@ -4,7 +4,6 @@ global/config.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 include $(dir $(global/config.mk))/print.mk
 
 SHELL := bash
-.ONESHELL:
 
 .SHELLFLAGS := -eu -o pipefail -c
 .DELETE_ON_ERROR:

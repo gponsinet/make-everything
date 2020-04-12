@@ -3,9 +3,12 @@ global/system.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 include $(dir $(global/system.mk))/config.mk
 
-ifeq ($(OS),Windows_NT)
-	global/system/windows := global/system/windows
-else
+ifdef OS
+	ifeq ($(OS),Windows_NT)
+		global/system/windows := global/system/windows
+	endif
+endif
+ifndef OS
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
 		global/system/linux := global/system/linux
