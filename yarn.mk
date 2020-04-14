@@ -1,75 +1,75 @@
 ifndef yarn.mk
 yarn.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
+include $(dir $(yarn.mk))/global/rules.mk
 include $(dir $(yarn.mk))/global/config.mk
-include $(dir $(yarn.mk))/global/system.mk
+include $(dir $(yarn.mk))/global/helper.mk
 include $(dir $(yarn.mk))/brew.mk
 
-.PHONY: yarn/setup
-package.json: $(brew/install)/yarn $(brew/install)/jq
-	yarn init
-	yarn set version berry
-	echo 'nodeLinker: node-modules' > .yarnrc.yml
-	jq '.workspace = { packages: [] }' package.json > package-update.json
-	mv package-update.json package.json
-yarn.lock: package.json
-	yarn
-	touch $@
-yarn/setup := yarn.lock
-yarn/setup: $(yarn/setup)
+yarn.path := $(or $(dir $(shell $(call find_up_last,package.json))),$(PWD))
+yarn.packages := $(PWD)/ $(dir $(shell \
+	find $(yarn.path) \
+		-type f \
+		-name package.json \
+		-or -name node_modules \
+		-or -name yarn.lock \
+		-not -path "*/node_modules/*" \
+))
 
-.IGNORE: brew/uninstall/yarn
+install: install.yarn
+clean: clean.yarn
+
+.PHONY: install.yarn
+install.yarn: install.brew
+install.yarn: node_modules
+
 .IGNORE \
-.PHONY: yarn/trash
-yarn/trash: brew/uninstall/yarn
+.PHONY: clean.yarn
+clean.brew: clean.yarn
+clean.yarn:
+	[ "$(PWD)" == "$(yarn.path)" ] && brew uninstall yarn || true
 	rm -rf \
 		yarn.lock \
-		package.json \
 		.yarn \
 		.yarnrc.yml \
-		node_modules \
+		.pnp.js \
 		yarn-error.log \
-		.pnp.js
+		$(addsuffix package.json,$(yarn.packages)) \
+		$(addsuffix node_modules,$(yarn.packages)) \
 
-.PHONY: yarn/add/%
-yarn/add := node_modules
-$(yarn/add)/%: $(yarn/setup)
-	yarn add $*
-yarn/add/%:
-	$(MAKE) $@
-
-.PHONY: yarn/add/dev/%
-yarn/add/dev := node_modules
-$(yarn/add/dev)/%: $(yarn/setup)
-	yarn add -D $*
+node_modules: $(yarn.path)/yarn.lock
 	touch $@
-yarn/add/dev/%:
-	$(MAKE) $@
 
-.PHONY: yarn/add/peer/%
-yarn/add/peer := node_modules
-$(yarn/add/peer)/%: $(yarn/setup)
-	yarn add -P $*
-yarn/add/peer/%:
-	$(MAKE) $@
+%/node_modules: $(yarn.path)/yarn.lock
+	touch $@
 
-.PHONY: yarn/remove/%
-yarn/remove := yarn/remove
-yarn/remove/%:
-	yarn remove $* || true
+$(yarn.path)/.update-package.json: $(addsuffix package.json,$(yarn.packages))
 
-.PHONY: yarn/workspace/add/%
-yarn/workspace/add := $(yarn/workspace/add)
-yarn/workspace/add/%: $(yarn/setup)
-	jq '.workspace.packages -= ["$*"]' package.json > package-update.json
-	mv package-update.json package.json
-	jq '.workspace.packages += ["$*"]' package.json > package-update.json
-	mv package-update.json package.json
 
-.PHONY: yarn/workspace/remove/%
-yarn/workspace/remove := $(yarn/workspace/remove)
-yarn/workspace/remove/%:
-	jq '.workspace.packages -= ["$*"]' package.json > package-update.json
-	mv package-update.json package.json
+$(yarn.path)/yarn.lock: \
+		$(addsuffix package.json,$(yarn.packages)) \
+		$(yarn.path)/.yarnrc.yml
+	yarn
+	touch $@
+
+%/package.json: $(yarn.path)/package.json
+	yarn init
+	jq '.workspaces = []' $< > $<-tmp
+	mv $<-tmp $<
+	packages=$(patsubst $(yarn.path)%,./%,$(filter-out $(yarn.path),$(yarn.packages))); \
+	for package in $$packages; do \
+		jq ".workspaces -= [\"$$package\"]" $< > $<-tmp; \
+		jq ".workspaces += [\"$$package\"]" $<-tmp > $<; \
+		rm $<-tmp; \
+	done
+
+$(yarn.path)/package.json:
+	yarn init
+	jq ".private = true" $@ > $@-tmp
+	mv $@-tmp $@
+
+
+$(yarn.path)/.yarnrc.yml:
+	echo 'nodeLinker: node-modules' > $@
 
 endif # yarn.mk

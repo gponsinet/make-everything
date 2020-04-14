@@ -1,32 +1,43 @@
 ifndef react-native.mk
 react-native.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(react-native.mk))/global/config.mk
-include $(dir $(react-native.mk))/brew.mk
 include $(dir $(react-native.mk))/yarn.mk
 
-.PHONY: react-native/setup
-react-native/setup := .rn
-.DELETE_ON_ERROR: $(react-native/setup)
-$(react-native/setup): $(brew/install)/jq $(yarn/add/dev)/react-native-cli
-	$(MAKE) yarn/workspace/add/.rn
-	echo y | yarn react-native init \
-		--template typescript \
-		`jq .name package.json | sed 's/"//g'`
-	mv `jq .name package.json | sed 's/"//g'` .rn
-react-native/setup: $(react-native/setup)
+install: install.react-native
+clean: clean.react-native
 
-.PHONY: react-native/upgrade
-react-native/upgrade: $(react-native/setup)
-	yarn react-native upgrade
+.PHONY: install.react-native
+install.react-native: install.yarn
+install.react-native: .rn
 
-.PHONY: react-native/trash
-react-native/trash := \
-	$(yarn/remove)/react-native-cli \
-	yarn/workspace/remove/.rn
-.IGNORE: react-native/trash $(react-native/trash)
-react-native/trash: $(react-native/trash)
-	rm -rf $(react-native/setup)
-yarn/trash: react-native/trash
+.IGNORE \
+.PHONY: clean.react-native
+clean.yarn: clean.react-native
+clean.react-native:
+	yarn remove --dev react-native
+	rm -rf \
+		.rn \
+		.tmp-rn \
+		.tmp-rn-remove-workspace-package.json \
+
+.tmp-rn-remove-workspace-package.json:
+	jq '.workspace.packages -= ["$*"]' package.json > $@
+
+.tmp-rn-add-workspace-package.json: .tmp-rn-remove-workspace-package.json
+	rm $<
+	jq '.workspace.packages += ["$*"]' package.json > $@
+
+.tmp-rn:
+	mkdir -p $@
+
+.rn: node_modules/react-native node_modules/react-native-cli \
+	| .tmp-rn-add-workspace-package.json .tmp-rn
+	mv .tmp-rn-add-workspace-package.json package.json
+	cd .tmp-rn && echo y | yarn react-native init \
+		`jq .name ../package.json | sed 's/"//g'`
+	mv .tmp-rn/`jq .name package.json | sed 's/"//g'` .rn && rm -rf .tmp-rn
+
+node_modules/react-native:
+	yarn add --dev react-native@latest
 
 endif # react-native.mk
