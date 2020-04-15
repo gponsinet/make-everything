@@ -1,7 +1,6 @@
 ifndef brew.mk
 brew.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(yarn.mk))/global/rules.mk
 include $(dir $(brew.mk))/global/config.mk
 include $(dir $(brew.mk))/global/system.mk
 
@@ -12,9 +11,6 @@ brew.path := /home/linuxbrew/.linuxbrew
 else ifdef global/system/darwin
 brew.path := /usr/local/homebrew
 endif
-
-install: install.brew
-clean: clean.brew
 
 .PHONY: install.brew
 install.brew: $(brew.path)
