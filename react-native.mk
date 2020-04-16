@@ -24,19 +24,40 @@ react-native/files := $(addprefix .react-native, \
 )
 
 .PHONY: install.react-native
-install.react-native: .react-native/package.json
+install.react-native: .react-native/package.json .react-native/node_modules
+ifdef android.mk
+install.react-native: install.android
+endif
 
 .IGNORE \
 .PHONY: clean.react-native
 clean.yarn: clean.react-native
 clean.react-native:
 	yarn remove react-native
-	rm -rf .react-native
 
 .IGNORE \
 .PHONY: trash.react-native
 trash.yarn: trash.react-native
 trash.react-native: clean.react-native
+	rm -rf .react-native
+
+.PHONY: bundle.react-native.watch
+bundle.react-native: \
+		install.react-native
+
+.PHONY: \
+	debug.react-native.android \
+	debug.react-native.ios
+
+debug.react-native.android: install.react-native
+	cd .react-native && $(yarn.path)/node_modules/.bin/react-native run-android \
+		--variant debug \
+		--port '$(call ask,react-native,watch-port,8081)'
+
+debug.react-native.ios: install.react-native
+	cd .react-native && $(yarn.path)/node_modules/.bin/react-native run-ios \
+		--port '$(call ask,react-native,watch-port,8081)' \
+		--verbose
 
 react-native/package := $(shell \
 	jq .workspaces $(yarn.path)/package.json \
@@ -66,5 +87,8 @@ endif
 
 $(yarn.path)/node_modules/.bin/react-native: | $(yarn.path)/yarn.lock
 	yarn add react-native
+
+.react-native/node_modules:
+	ln -sf $(yarn.path)/node_modules $@
 
 endif # react-native.mk

@@ -6,8 +6,8 @@ include $(dir $(yarn.mk))/global/helper.mk
 include $(dir $(yarn.mk))/brew.mk
 
 yarn.path := $(patsubst %/,%,$(or $(dir $(shell \
-	$(call find_up_last,package.json))),$(PWD)) \
-)
+	$(call find_up_last,package.json) \
+)),$(PWD)))
 yarn.packages = $(filter-out $(yarn.path), \
 	$(PWD) \
 	$(patsubst %/,%,$(dir $(shell \
