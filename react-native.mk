@@ -33,6 +33,11 @@ clean.react-native:
 	yarn remove react-native
 	rm -rf .react-native
 
+.IGNORE \
+.PHONY: trash.react-native
+trash.yarn: trash.react-native
+trash.react-native: clean.react-native
+
 react-native/package := $(shell \
 	jq .workspaces $(yarn.path)/package.json \
 	| grep '$(shell \
