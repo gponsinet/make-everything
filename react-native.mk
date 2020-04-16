@@ -1,6 +1,8 @@
 ifndef react-native.mk
 react-native.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
+include $(dir $(react-native.mk))/global/config.mk
+include $(dir $(react-native.mk))/global/helper.mk
 include $(dir $(react-native.mk))/yarn.mk
 
 react-native/files := $(addprefix .react-native, \
@@ -22,7 +24,7 @@ react-native/files := $(addprefix .react-native, \
 )
 
 .PHONY: install.react-native
-install.react-native: .react-native
+install.react-native: .react-native/package.json
 
 .IGNORE \
 .PHONY: clean.react-native
@@ -31,29 +33,33 @@ clean.react-native:
 	yarn remove react-native
 	rm -rf .react-native
 
-react-native/app-title ?= \
-	$(shell $(call read,react-native/app-title,$(shell jq .name package.json|sed 's/"//g')))
-react-native/template ?= \
-	$(shell $(call read,react-native/template,react-native-template-typescript))
+react-native/package := $(shell \
+	jq .workspaces $(yarn.path)/package.json \
+	| grep '$(shell \
+			echo $(PWD) | sed "s|^$(yarn.path)\(.*\)|.\1/.react-native|" \
+		)' \
+)
+ifndef react-native/package
+# permit to add .react-native/ as workspace package
+$(yarn.path)/package.json: $(PWD)/.react-native/package.json
+$(PWD)/.react-native/package.json: $(PWD)/.react-native/
+	touch $@
+endif
 
-.react-native: | .react-native/package.json node_modules/.bin/react-native
-	chmod +x node_modules/.bin/react-native
-	rm -rf .react-native
-	./node_modules/.bin/react-native init \
-		'RN' \
-		--title '$(react-native/app-title)' \
-		--directory '$@' \
-		--template '$(react-native/template)'
-	jq '.name = "@mk/react-native"' .react-native/package.json \
-		> .react-native/package.json-tmp
-	mv .react-native/package.json-tmp .react-native/package.json
-	yarn
+.react-native/package.json: | \
+		$(yarn.path)/package.json \
+		$(yarn.path)/node_modules/.bin/react-native
+	rm -rf $(dir $@)
+	chmod +x $(yarn.path)/node_modules/.bin/react-native
+	$(yarn.path)/node_modules/.bin/react-native init \
+		'$(call ask,react-native,project-name,RNApp)' \
+		--title '$(call ask,react-native,app-title,$(react-native/project-name))' \
+		--directory '$(dir $@)' \
+		--template '$(call ask,react-native,\
+			template,react-native-template-typescript)'
+	touch $@
 
-.react-native/package.json:
-	mkdir -p $(dir $@)
-	jq -n '.name = "@mk/react-native"' > $@
-
-node_modules/.bin/react-native: $(yarn.path)/yarn.lock
-	yarn add --dev react-native
+$(yarn.path)/node_modules/.bin/react-native: | $(yarn.path)/yarn.lock
+	yarn add react-native
 
 endif # react-native.mk

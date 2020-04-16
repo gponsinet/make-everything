@@ -18,8 +18,11 @@ install.brew: $(brew.path)
 .IGNORE \
 .PHONY: clean.brew
 clean.brew:
-	rm -rf .brew
 	ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+
+.IGNORE \
+.PHONY: trash.brew
+trash.brew: clean.brew
 
 $(brew.path):
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"

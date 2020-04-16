@@ -18,4 +18,9 @@ read = \
 		read_var \
 	&& [ -z "$$read_var" ] && echo $(2) || echo "$$read_var"
 
+ask = $(or $($(strip $(1))/$(strip $(2))),$(strip $(eval \
+	$(strip $(1))/$(strip $(2)) := \
+		$(shell $(call read,$(strip $(1))/$(strip $(2)),$(strip $(3)))) \
+	) $($(strip $(1))/$(strip $(2)))))
+
 endif # global/helper.mk
