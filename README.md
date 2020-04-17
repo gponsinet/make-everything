@@ -3,6 +3,12 @@
 
 ## Installation
 
+### In your home directory
+
+```bash
+git clone git@github.com:gponsinet/make-everythings ~/.mk
+```
+
 ### With submodules
 
 ```bash
