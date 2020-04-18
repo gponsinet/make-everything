@@ -26,14 +26,18 @@ react-native/files := $(addprefix .react-native, \
 .PHONY: install.react-native
 install.react-native: .react-native/package.json .react-native/node_modules
 ifdef android.mk
-install.react-native: install.android
+install.react-native: $(android.path)/tools $(android.path)/platform-tools
 endif
 
 .IGNORE \
 .PHONY: clean.react-native
 clean.yarn: clean.react-native
+ifdef android.mk
+clean.react-native: clean.android
+endif
 clean.react-native:
 	yarn remove react-native
+	rm -rf .react-native
 
 .IGNORE \
 .PHONY: trash.react-native
