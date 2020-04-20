@@ -81,4 +81,7 @@ $(yarn.path)/.yarnrc.yml:
 	yarn set version berry
 	echo 'nodeLinker: node-modules' >> $@
 
+$(yarn.path)/node_modules/%:
+	yarn add $*
+
 endif # yarn.mk

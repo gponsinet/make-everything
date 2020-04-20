@@ -16,11 +16,13 @@ read = \
 	read \
 		-p "$(1)$$([ -z "$(2)" ] || echo ' ($(2))'): " \
 		read_var \
-	&& [ -z "$$read_var" ] && echo $(2) || echo "$$read_var"
+	&& [ -z "$$read_var" ] && echo '$(2)' || echo "$$read_var"
 
-ask = $(or $($(strip $(1))/$(strip $(2))),$(strip $(eval \
-	$(strip $(1))/$(strip $(2)) := \
-		$(shell $(call read,$(strip $(1))/$(strip $(2)),$(strip $(3)))) \
-	) $($(strip $(1))/$(strip $(2)))))
+ask = $(or $($(strip $(1))/$(strip $(2))),$(strip \
+	$(eval $(strip $(1))/$(strip $(2)) := \
+		$(shell $(call read,$(strip $(1))/$(strip $(2)),$(strip $(3))))) \
+	$($(strip $(1))/$(strip $(2)))))
+
+json_merge = jq -s ".[0] * .[1]" $(1) $(2) > $(1)-merged && mv $(1)-merged $(1)
 
 endif # global/helper.mk

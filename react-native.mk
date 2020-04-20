@@ -2,8 +2,10 @@ ifndef react-native.mk
 react-native.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 include $(dir $(react-native.mk))/global/config.mk
+include $(dir $(react-native.mk))/global/system.mk
 include $(dir $(react-native.mk))/global/helper.mk
 include $(dir $(react-native.mk))/yarn.mk
+include $(dir $(react-native.mk))/android.mk
 
 react-native/files := $(addprefix .react-native, \
 	android \
@@ -24,17 +26,26 @@ react-native/files := $(addprefix .react-native, \
 )
 
 .PHONY: install.react-native
-install.react-native: .react-native/package.json .react-native/node_modules
-ifdef android.mk
-install.react-native: $(android.path)/tools $(android.path)/platform-tools
+install.react-native: \
+	.react-native/package.json \
+	.react-native/node_modules \
+
+.PHONY: install.react-native.android
+install.react-native.android: \
+	install.react-native \
+	install.android.tools \
+	install.android.platform-tools \
+	install.android.emulator
+
+ifdef global/system/darwin
+install.react-native.ios: \
+		install.react-native
 endif
 
 .IGNORE \
 .PHONY: clean.react-native
 clean.yarn: clean.react-native
-ifdef android.mk
 clean.react-native: clean.android
-endif
 clean.react-native:
 	yarn remove react-native
 	rm -rf .react-native
@@ -45,23 +56,28 @@ trash.yarn: trash.react-native
 trash.react-native: clean.react-native
 	rm -rf .react-native
 
-.PHONY: bundle.react-native.watch
-bundle.react-native: \
-		install.react-native
 
-.PHONY: \
-	debug.react-native.android \
-	debug.react-native.ios
-
-debug.react-native.android: install.react-native
+.PHONY: debug.react-native.android
+debug.react-native.android: install.react-native.android
 	cd .react-native && $(yarn.path)/node_modules/.bin/react-native run-android \
 		--variant debug \
 		--port '$(call ask,react-native,watch-port,8081)'
 
-debug.react-native.ios: install.react-native
+.PHONY: release.react-native.android
+release.react-native.android: install.react-native.android
+	# todo
+
+ifdef global/system/darwin
+.PHONY: debug.react-native.ios
+debug.react-native.ios: install.react-native.ios
 	cd .react-native && $(yarn.path)/node_modules/.bin/react-native run-ios \
 		--port '$(call ask,react-native,watch-port,8081)' \
 		--verbose
+
+.PHONY: release.react-native.ios
+release.react-native.ios: install.react-native.ios
+	# todo
+endif
 
 react-native/package := $(shell \
 	jq .workspaces $(yarn.path)/package.json \
