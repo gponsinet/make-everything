@@ -24,70 +24,91 @@ endif
 export ANDROID_HOME := $(android.path)
 export PATH := $(android.path)/tools/bin:$(PATH)
 
-.PHONY: install.android
+.PHONY: \
+	install \
+	install.android \
+	install.android.tools \
+	install.android.build-tools \
+	install.android.platform-tools \
+	install.android.platform \
+	install.android.emulator \
+	install.android.system-image
+
+install:
+
 install.android: \
 	$(brew.path)/Cellar/wget \
 	$(brew.path)/Cellar/unzip \
 	$(brew.path)/Cellar/adoptopenjdk \
-	$(android.path)
+	install.android.tools \
+	install.android.build-tools \
+	install.android.platform-tools \
+	install.android.platforms \
+	install.android.emulator
 
-.PHONY: install.android.tools
 install.android.tools: \
 	$(android.path)/tools
 
-.PHONY: install.android.build-tools
-install.android.build-tools: version = $(call ask,android,build-tools,29.0.3)
+install.android.build-tools: \
+	version = $(call ask,android,build-tools,29.0.3)
 install.android.build-tools:
 	$(MAKE) $(android.path)/build-tools/$(version)
 
-.PHONY: install.android.platform-tools
 install.android.platform-tools:
 	$(MAKE) $(android.path)/platform-tools
 
-.PHONY: install.android.platform
-install.android.platform: version = $(call ask,android,platform,android-29)
+install.android.platform: \
+	version = $(call ask,android,platform,android-29)
 install.android.platform:
 	$(MAKE) $(android.path)/platforms/$(version)
 
-.PHONY: install.android.emulator
 install.android.emulator: create.android.emulator
 
-.PHONY: install.android.system-image
-install.android.system-image: system-image = $(call ask,android,system-image,android-29;default;x86)
+install.android.system-image: \
+	system-image = \
+		$(call ask,android,system-image,android-29;default;x86)
 install.android.system-image:
 	$(MAKE) $(android.path)/system-images/$(subst ;,/,$(system-image))
 
-.PHONY: create.android.emulator
-create.android.emulator: name = $(call ask,android.emulator,name,default)
-create.android.emulator: $(android.path)/emulator install.android.system-image
+.PHONY: \
+	create.android.emulator
+
+create.android.emulator: \
+	name = $(call ask,android.emulator,name,default)
+create.android.emulator: \
+		$(android.path)/emulator install.android.system-image
 	avdmanager create avd \
 		-n $(name) \
 		-k "system-images;$(android/system-image)" \
 
-.PHONY: update.android
+.PHONY: \
+	update \
+	update.android
+
 update.android: install.android
 	sdkmanager --sdk_root=$(ANDROID_HOME) --update
 
 .IGNORE \
-.PHONY: clean.android
+.PHONY: \
+	clean \
+	clean.android
+
+clean: clean.android
 clean.android:
 
 .IGNORE \
-.PHONY: trash.android
+.PHONY: \
+	trash \
+	trash.android
+
+trash: trash.android
 trash.android: clean.android
 	rm -rf $(android.path)
 
-$(android.path): | \
-	$(android.path)/tools \
-	$(android.path)/build-tools \
-	$(android.path)/platform-tools \
-	$(android.path)/platforms \
-	$(android.path)/emulator
-
-$(android.path)/:
+$(android.path):
 	mkdir -p $@
 
-$(android.path)/tools: | $(android.path)/
+$(android.path)/tools: | $(android.path)
 	wget -O $@.zip $(android.tools.href)
 	unzip -d $(android.path) $@.zip
 

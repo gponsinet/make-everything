@@ -25,59 +25,70 @@ react-native/files := $(addprefix .react-native, \
 	.watchmanconfig \
 )
 
-.PHONY: install.react-native
-install.react-native: \
-	.react-native/package.json \
-	.react-native/node_modules \
+.PHONY: \
+	install \
+	install.react-native \
+	install.react-native.android
 
-.PHONY: install.react-native.android
+install: install.react-native
+install.react-native: \
+	.react-native/index.js \
+	.react-native/node_modules
 install.react-native.android: \
 	install.react-native \
 	install.android.tools \
 	install.android.platform-tools \
 	install.android.emulator
 
-ifdef global/system/darwin
-install.react-native.ios: \
-		install.react-native
-endif
-
 .IGNORE \
-.PHONY: clean.react-native
+.PHONY: \
+	clean \
+	clean.react-native \
+	clean.react-native.android
+
+clean: clean.yarn
 clean.yarn: clean.react-native
-clean.react-native: clean.android
+clean.react-native: clean.react-native.android
+clean.react-native.android: clean.android
+
 clean.react-native:
-	yarn remove react-native
 	rm -rf .react-native
 
 .IGNORE \
-.PHONY: trash.react-native
+.PHONY: \
+	trash \
+	trash.react-native \
+	trash.react-native.android
+
+trash: trash.react-native
 trash.yarn: trash.react-native
 trash.react-native: clean.react-native
-	rm -rf .react-native
+trash.react-native.android: clean.react-native.android
 
+trash.react-native:
+	yarn remove react-native
 
-.PHONY: debug.react-native.android
+.PHONY: \
+	debug \
+	debug.react-native \
+	debug.react-native.android
+
+debug: debug.react-native
+debug.react-native: debug.react-native.android
 debug.react-native.android: install.react-native.android
+
+debug.react-native.android:
 	cd .react-native && $(yarn.path)/node_modules/.bin/react-native run-android \
 		--variant debug \
 		--port '$(call ask,react-native,watch-port,8081)'
 
-.PHONY: release.react-native.android
+.PHONY: \
+	release \
+	release.android \
+	release.react-native.android
+
 release.react-native.android: install.react-native.android
 	# todo
-
-ifdef global/system/darwin
-.PHONY: debug.react-native.ios
-debug.react-native.ios: install.react-native.ios
-	cd .react-native && $(yarn.path)/node_modules/.bin/react-native run-ios \
-		--port '$(call ask,react-native,watch-port,8081)' \
-		--verbose
-
-.PHONY: release.react-native.ios
-release.react-native.ios: install.react-native.ios
-	# todo
-endif
 
 react-native/package := $(shell \
 	jq .workspaces $(yarn.path)/package.json \
@@ -92,7 +103,7 @@ $(PWD)/.react-native/package.json: $(PWD)/.react-native/
 	touch $@
 endif
 
-.react-native/package.json: | \
+.react-native/index.js: | \
 		$(yarn.path)/package.json \
 		$(yarn.path)/node_modules/.bin/react-native
 	rm -rf $(dir $@)

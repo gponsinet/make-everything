@@ -15,12 +15,21 @@ yarn.packages = $(filter-out $(yarn.path), \
 	))) \
 )
 
-.PHONY: install.yarn
+.PHONY: \
+	install \
+	install.yarn
+
+install: install.yarn
+
 install.yarn: install.brew
 install.yarn: $(yarn.path)/yarn.lock
 
 .IGNORE \
-.PHONY: clean.yarn
+.PHONY: \
+	clean \
+	clean.yarn
+
+clean: clean.brew
 clean.brew: clean.yarn
 clean.yarn:
 	rm -rf \
@@ -36,6 +45,8 @@ clean.yarn:
 
 .IGNORE \
 .PHONY: trash.yarn
+
+trash: trash.brew
 trash.brew: trash.yarn
 trash.yarn: clean.yarn
 	[ "$(PWD)" != "$(yarn.path)" ] || brew uninstall yarn
@@ -53,7 +64,9 @@ package.json: $(yarn.path)/package.json
 	touch $@
 
 $(yarn.path)/package.json: | \
+		$(brew.path)/Cellar/node \
 		$(brew.path)/Cellar/yarn \
+		$(brew.path)/Cellar/jq \
 		$(addsuffix /package.json,$(yarn.packages))
 	[ -e "$@" ] || yarn init
 	jq '.workspaces = []' $@ > $@-tmp

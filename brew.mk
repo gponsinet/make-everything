@@ -12,22 +12,35 @@ else ifdef global/system/darwin
 brew.path := /usr/local/homebrew
 endif
 
-.PHONY: install.brew
+.PHONY: \
+	install \
+	install.brew
+
+install: install.brew
 install.brew: $(brew.path)
 
 .IGNORE \
-.PHONY: clean.brew
+.PHONY: \
+	clean \
+	clean.brew
+
+clean: clean.brew
 clean.brew:
-	ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 
 .IGNORE \
-.PHONY: trash.brew
+.PHONY: \
+	trash \
+	trash.brew
+
+trash: trash.brew
 trash.brew: clean.brew
+	sudo ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+	sudo rm -rf $(brew.path)
 
 $(brew.path):
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-$(brew.path)/Cellar/%:
+$(brew.path)/Cellar/%: $(brew.path)
 	brew install $*
 
 endif # global/system.mk
