@@ -37,9 +37,6 @@ export PATH := $(android.path)/tools/bin:$(PATH)
 install:
 
 install.android: \
-	$(brew.path)/Cellar/wget \
-	$(brew.path)/Cellar/unzip \
-	$(brew.path)/Cellar/adoptopenjdk \
 	install.android.tools \
 	install.android.build-tools \
 	install.android.platform-tools \
@@ -105,7 +102,10 @@ trash: trash.android
 trash.android: clean.android
 	rm -rf $(android.path)
 
-$(android.path):
+$(android.path): | \
+		$(brew.path)/Cellar/wget \
+		$(brew.path)/Cellar/unzip \
+		$(brew.path)/Cellar/adoptopenjdk
 	mkdir -p $@
 
 $(android.path)/tools: | $(android.path)

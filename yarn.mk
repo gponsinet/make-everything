@@ -15,6 +15,8 @@ yarn.packages = $(filter-out $(yarn.path), \
 	))) \
 )
 
+export PATH := $(yarn.path)/node_modules/.bin:$(PATH)
+
 .PHONY: \
 	install \
 	install.yarn
@@ -53,6 +55,7 @@ trash.yarn: clean.yarn
 	rm -rf $(shell find . -type f -name package.json)
 
 $(yarn.path)/yarn.lock: \
+		package.json \
 		$(yarn.path)/package.json \
 		$(addsuffix /package.json,$(yarn.packages)) \
 		| \
@@ -61,6 +64,9 @@ $(yarn.path)/yarn.lock: \
 	touch $@
 
 package.json: $(yarn.path)/package.json
+	package=$(patsubst $(yarn.path)/%,./%,$(PWD)); \
+	jq ".workspaces -= [\"$$package\"]" $(yarn.path)/package.json > $(yarn.path)/package.json-tmp; \
+	jq ".workspaces += [\"$$package\"]" $(yarn.path)/package.json-tmp > $(yarn.path)/package.json; \
 	touch $@
 
 $(yarn.path)/package.json: | \

@@ -23,6 +23,17 @@ ask = $(or $($(strip $(1))/$(strip $(2))),$(strip \
 		$(shell $(call read,$(strip $(1))/$(strip $(2)),$(strip $(3))))) \
 	$($(strip $(1))/$(strip $(2)))))
 
+select = $(or $($(strip $(1))/$(strip $(2))),$(strip \
+	$(eval $(strip $(1))/$(strip $(2)) := \
+		$(shell \
+			select select_var in $(3); \
+			do \
+				echo $$select_var; \
+				break; \
+			done \
+		)) \
+	$($(strip $(1))/$(strip $(2)))))
+
 json_merge = jq -s ".[0] * .[1]" $(1) $(2) > $(1)-merged && mv $(1)-merged $(1)
 
 endif # global/helper.mk
