@@ -38,10 +38,6 @@ trash.pbhbs:
 	gen \
 	gen.pbhbs
 
-pbhbs/template-dir ?= ./template
-pbhbs/output-dir ?= .
-pbhbs/proto-path ?= .
-
 gen: gen.pbhbs
 gen.pbhbs:
 	pbhbs \
