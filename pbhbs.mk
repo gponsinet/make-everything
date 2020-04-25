@@ -39,14 +39,16 @@ trash.pbhbs:
 	gen.pbhbs
 
 gen: gen.pbhbs
+gen.pbhbs: \
+proto-paths = $(subst $(shell echo ","), ,$(call ask,pbhbs,proto-paths,.))
 gen.pbhbs:
 	pbhbs \
 		-p $(yarn.path)/node_modules/@protocolbuffers/protobuf/src \
 		-p $(yarn.path)/node_modules/@googleapis/googleapis \
-		-p $(call ask,pbhbs,proto-path,.) \
+		$(foreach proto-path,$(proto-paths),-p $(proto-path)) \
 		--template-dir $(call ask,pbhbs,template-dir,./template) \
 		--output-dir $(call ask,pbhbs,output-dir,.) \
-		$(shell find $(pbhbs/proto-path) -type f -name '*.proto')
+		$(shell find $(proto-paths) -type f -name '*.proto')
 
 $(yarn.path)/node_modules/pbhbs:
 	yarn add pbhbs@latest

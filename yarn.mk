@@ -67,6 +67,7 @@ package.json: $(yarn.path)/package.json
 	package=$(patsubst $(yarn.path)/%,./%,$(PWD)); \
 	jq ".workspaces -= [\"$$package\"]" $(yarn.path)/package.json > $(yarn.path)/package.json-tmp; \
 	jq ".workspaces += [\"$$package\"]" $(yarn.path)/package.json-tmp > $(yarn.path)/package.json; \
+	rm $(yarn.path)/package.json-tmp
 	touch $@
 
 $(yarn.path)/package.json: | \

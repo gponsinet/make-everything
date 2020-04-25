@@ -11,6 +11,8 @@ brew.path := /home/linuxbrew/.linuxbrew
 else ifdef global/system/darwin
 brew.path := /usr/local/homebrew
 endif
+brew.cellar := $(brew.path)/Cellar
+brew.tap := $(brew.path)/Homebrew/Library/Taps
 
 .PHONY: \
 	install \
@@ -40,8 +42,11 @@ trash.brew: clean.brew
 $(brew.path):
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-$(brew.path)/Cellar/%: $(brew.path)
+$(brew.cellar)/%: $(brew.path)
 	brew install $*
+
+$(brew.tap)/%: $(brew.path)
+	brew tap $(subst homebrew-,,$*)
 
 endif # global/system.mk
 endif # brew.mk
