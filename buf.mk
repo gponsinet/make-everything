@@ -5,7 +5,12 @@ include $(dir $(buf.mk))/global/config.mk
 include $(dir $(buf.mk))/global/helper.mk
 include $(dir $(buf.mk))/brew.mk
 
-buf.path := $(or $(dir $(shell $(call find_up_first,buf.yaml))), $(PWD))
+buf.root := $(or $(patsubst %/,%,$(dir $(shell $(call find_up_first,.buf)))), $(PWD))
+buf.path :=  $(PWD)/.buf
+
+test:
+	echo $(buf.root)
+	echo $(buf.path)
 
 .PHONY: \
 	install \
@@ -15,41 +20,37 @@ install: install.buf
 install.buf: \
 	$(brew.tap)/bufbuild/homebrew-buf \
 	$(brew.cellar)/buf \
-	$(buf.path)/.buf/googleapis \
-	$(buf.path)/.buf/hack \
+	$(buf.path)/googleapis \
+	$(buf.path)/hack \
 	$(buf.path)/buf.yaml
 
-define buf/buf.yaml
-> build:
->   roots:
->     - .buf/googleapis
->     - .buf/hack
-> lint:
->   use:
->     - BASIC
->     - FILE_LOWER_SNAKE_CASE
->   except:
->     - ENUM_NO_ALLOW_ALIAS
->     - IMPORT_NO_PUBLIC
->     - PACKAGE_AFFINITY
->     - PACKAGE_DIRECTORY_MATCH
->     - PACKAGE_SAME_DIRECTORY
-> breaking:
->   use:
->     - WIRE_JSON
-endef
+$(buf.path)/:
+	([ ! -e "$(buf.path)" ] && [ "$(PWD)" == "$(buf.root)" ] && mkdir -p $@) \
+		|| ln -sf $(buf.root)/.buf $(buf.path)
 
-$(buf.path)/.buf/hack:
-	ln -s .. $@
+$(buf.path)/hack: $(buf.path)/
+	rm $@ && ln -sf .. $@
 
-.ONESHELL: $(buf.path)/buf.yaml
 $(buf.path)/buf.yaml:
-	echo '$(buf/buf.yaml)' | sed 's/> //g' > $@
+	echo 'build:' > $@
+	echo '  roots:' >> $@
+	echo '    - .buf/googleapis' >> $@
+	echo '    - .buf/hack' >> $@
+	echo 'lint:' >> $@
+	echo '  use:' >> $@
+	echo '    - BASIC' >> $@
+	echo '    - FILE_LOWER_SNAKE_CASE' >> $@
+	echo '  except:' >> $@
+	echo '    - ENUM_NO_ALLOW_ALIAS' >> $@
+	echo '    - IMPORT_NO_PUBLIC' >> $@
+	echo '    - PACKAGE_AFFINITY' >> $@
+	echo '    - PACKAGE_DIRECTORY_MATCH' >> $@
+	echo '    - PACKAGE_SAME_DIRECTORY' >> $@
+	echo 'breaking:' >> $@
+	echo '  use:' >> $@
+	echo '    - WIRE_JSON' >> $@
 
-$(buf.path)/.buf/:
-	mkdir -p $@
-
-$(buf.path)/.buf/googleapis: $(buf.path)/.buf/
+$(buf.path)/googleapis: $(buf.path)/
 	rm -rf $@
 	mkdir -p $@ && cd $@ \
 		&& git init \
@@ -90,18 +91,19 @@ check.buf: \
 	check.buf.lint \
 	check.buf.breaking
 check.buf.build: install.buf
-	buf image build -o /dev/null
+	cd $(buf.root) && buf image build -o /dev/null
 check.buf.lint: install.buf
-	buf check lint
+	cd $(buf.root) && buf check lint
 check.buf.breaking: install.buf
-	buf check breaking --against-input '$(call ask,buf.breaking,againt-input,.git\#branch=master)'
+	cd $(buf.root) && buf check breaking --against-input '$(call ask,buf.breaking,againt-input,.git\#branch=master)'
 
 .PHONY: \
 	build \
-	build.buf
+	build.buf \
 
 build: build.buf
-build.buf: install.buf
+build.buf: \
+	# TODO
 
 .PHONY: \
 	lint \
@@ -109,5 +111,6 @@ build.buf: install.buf
 
 lint: lint.buf
 lint.buf: install.buf
+	# TODO
 
 endif # buf.mk
