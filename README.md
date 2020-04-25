@@ -1,6 +1,10 @@
 # make-everythings
 :muscle: Preconfigured .mk files to improve your productivity
 
+## Warning
+
+This code is currently not stable, please creates issues and tell me what you want to improve, this is what this repository is looking for, thank you :heart:
+
 ## Installation
 
 ### In your home directory
@@ -44,5 +48,5 @@ echo 'include ../.mk/react-native.mk' >> app/Makefile
 * Run your app in debug mode (WIP)
 
 ```
-make -C app debug.react-native.android
+cd app && make debug.react-native.android
 ```
