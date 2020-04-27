@@ -5,12 +5,10 @@ include $(dir $(buf.mk))/global/config.mk
 include $(dir $(buf.mk))/global/helper.mk
 include $(dir $(buf.mk))/brew.mk
 
-buf.root := $(or $(patsubst %/,%,$(dir $(shell $(call find_up_first,.buf)))), $(PWD))
-buf.path :=  $(PWD)/.buf
-
-test:
-	echo $(buf.root)
-	echo $(buf.path)
+buf.root := $(patsubst %/,%,$(or $(dir $(shell \
+	$(call find_up_last,buf.yaml) \
+)),$(PWD)))
+buf.path :=  $(buf.root)/.buf
 
 .PHONY: \
 	install \
@@ -22,16 +20,16 @@ install.buf: \
 	$(brew.cellar)/buf \
 	$(buf.path)/googleapis \
 	$(buf.path)/hack \
-	$(buf.path)/buf.yaml
+	$(buf.root)/buf.yaml
 
 $(buf.path)/:
-	([ ! -e "$(buf.path)" ] && [ "$(PWD)" == "$(buf.root)" ] && mkdir -p $@) \
-		|| ln -sf $(buf.root)/.buf $(buf.path)
+	mkdir -p $@
+	touch $@
 
-$(buf.path)/hack: $(buf.path)/
-	rm $@ && ln -sf .. $@
+$(buf.path)/hack: | $(buf.path)/
+	rm -f $@ && ln -sf .. $@
 
-$(buf.path)/buf.yaml:
+$(buf.root)/buf.yaml: | $(buf.path)/
 	echo 'build:' > $@
 	echo '  roots:' >> $@
 	echo '    - .buf/googleapis' >> $@
@@ -50,7 +48,7 @@ $(buf.path)/buf.yaml:
 	echo '  use:' >> $@
 	echo '    - WIRE_JSON' >> $@
 
-$(buf.path)/googleapis: $(buf.path)/
+$(buf.path)/googleapis: | $(buf.path)/
 	rm -rf $@
 	mkdir -p $@ && cd $@ \
 		&& git init \
