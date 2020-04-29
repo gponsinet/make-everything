@@ -6,10 +6,13 @@ include $(dir $(protoc.mk))/global/helper.mk
 include $(dir $(protoc.mk))/brew.mk
 include $(dir $(protoc.mk))/go.mk
 include $(dir $(protoc.mk))/buf.mk
+include $(dir $(protoc.mk))/yarn.mk
 
 .PHONY: \
 	install \
-	install.protoc
+	install.protoc \
+	install.protoc.json \
+	install.protoc.hbs
 
 install: install.protoc
 install.protoc: \
@@ -20,6 +23,10 @@ install.protoc: \
 install.protoc.json: \
 	install.protoc \
 	$(go.src)/sourcegraph.com/sourcegraph/prototools/cmd/protoc-gen-json
+install.protoc.hbs: \
+	install.protoc \
+	$(brew.cellar)/yarn \
+	$(yarn.path)/node_modules/protoc-gen-hbs
 
 .PHONY: \
 	clean \
@@ -47,7 +54,6 @@ trash.protoc:
 	gen.protoc \
 	gen.protoc.json
 
-
 protoc/input_dir ?= $(shell realpath --relative-to=$(PWD) $(buf.root))
 protoc/input_files ?= $(shell find $(protoc/input_dir) -type f -name '*.proto')
 protoc/proto-paths ?= \
@@ -61,6 +67,11 @@ protoc.json/output_files := \
 		$(filter-out $(protoc/input_dir)/.buf/%,$(protoc/input_files))\
 	)
 
+protoc.hbs/template_dir ?= .
+protoc.hbs/template_files ?= $(shell find . $(template_dir) -type f -name '*.hbs')
+protoc.hbs/output_files ?= $(template_dir)/.generated
+protoc.hbs/output_dir ?= $(protoc/input_dir)
+
 gen: gen.protoc
 gen.protoc: \
 	gen.protoc.json
@@ -70,5 +81,12 @@ $(protoc.json/output_files): $(protoc.json/output_dir)/%.pb.json: $(protoc/input
 	protoc \
 		$(foreach proto-path,$(protoc/proto-paths),-I$(proto-path)) \
 		--json_out="out=$@:." $<
+
+gen.protoc.hbs: install.protoc.hbs $(protoc.hbs/output_files)
+$(protoc.hbs/output_files): $(protoc.hbs/template_files) $(protoc/input_files)
+	protoc \
+		$(foreach proto-path,$(protoc/proto-paths),-I$(proto-path)) \
+		--hbs_out="$(protoc.hbs/template_dir):." \
+		$(filter-out $(protoc/input_dir)/.buf/%,$(protoc/input_files))
 
 endif # protoc.mk
