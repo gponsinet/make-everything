@@ -54,23 +54,25 @@ trash.protoc:
 	gen.protoc \
 	gen.protoc.json
 
-protoc/input_dir ?= $(shell realpath --relative-to=$(PWD) $(buf.root))
-protoc/input_files ?= $(shell find $(protoc/input_dir) -type f -name '*.proto')
+protoc/input_dir ?= $(PWD)
+protoc/input_files ?= $(shell find $(PWD) -type f -name '*.proto')
 protoc/proto-paths ?= \
-	$(protoc/input_dir) $(addprefix $(buf.root)/,$(shell yq '.build.roots | .[]' $(buf.root)/buf.yaml | sed 's/"//g'))
+	$(buf.root) $(addprefix $(buf.root)/,$(shell yq '.build.roots | .[]' $(buf.root)/buf.yaml | sed 's/"//g'))
 
-protoc.json/output_dir ?= $(protoc/input_dir)
-protoc.json/output_files := \
+protoc/output_dir ?= $(buf.root)
+
+protoc.json/output_dir ?= $(protoc/output_dir)
+protoc.json/output_files ?= \
 	$(patsubst \
 		$(protoc/input_dir)/%.proto,\
 		$(protoc.json/output_dir)/%.pb.json,\
-		$(filter-out $(protoc/input_dir)/.buf/%,$(protoc/input_files))\
+		$(filter-out $(buf.root)/.buf/%,$(protoc/input_files))\
 	)
 
 protoc.hbs/template_dir ?= .
 protoc.hbs/template_files ?= $(shell find . $(template_dir) -type f -name '*.hbs')
+protoc.hbs/output_dir ?= $(protoc/output_dir)
 protoc.hbs/output_files ?= $(template_dir)/.generated
-protoc.hbs/output_dir ?= $(protoc/input_dir)
 
 gen: gen.protoc
 gen.protoc: \
@@ -80,13 +82,13 @@ gen.protoc.json: install.protoc.json $(protoc.json/output_files)
 $(protoc.json/output_files): $(protoc.json/output_dir)/%.pb.json: $(protoc/input_dir)/%.proto
 	protoc \
 		$(foreach proto-path,$(protoc/proto-paths),-I$(proto-path)) \
-		--json_out="out=$@:." $<
+		--json_out="out=$@:$(protoc/output_dir)" $<
 
 gen.protoc.hbs: install.protoc.hbs $(protoc.hbs/output_files)
 $(protoc.hbs/output_files): $(protoc.hbs/template_files) $(protoc/input_files)
 	protoc \
 		$(foreach proto-path,$(protoc/proto-paths),-I$(proto-path)) \
-		--hbs_out="$(protoc.hbs/template_dir):." \
+		--hbs_out="$(protoc.hbs/template_dir):$(protoc.hbs/output_dir)" \
 		$(filter-out $(protoc/input_dir)/.buf/%,$(protoc/input_files))
 
 endif # protoc.mk
