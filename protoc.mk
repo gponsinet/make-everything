@@ -69,12 +69,12 @@ protoc.json/output_files ?= \
 		$(filter-out $(buf.root)/.buf/%,$(protoc/input_files))\
 	)
 
-protoc.hbs/template_dir ?= .
+protoc.hbs/template_dir ?= ./templates
 protoc.hbs/template_files ?= $(shell find . $(template_dir) -type f -name '*.hbs')
 protoc.hbs/output_dir ?= $(protoc/output_dir)
 protoc.hbs/output_files ?= $(template_dir)/.generated
 
-gen: gen.protoc
+gen:
 gen.protoc: \
 	gen.protoc.json
 gen.protoc.json: install.protoc.json $(protoc.json/output_files)

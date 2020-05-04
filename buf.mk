@@ -19,21 +19,21 @@ install.buf: \
 	$(brew.tap)/bufbuild/homebrew-buf \
 	$(brew.cellar)/buf \
 	$(buf.path)/googleapis \
-	$(buf.path)/hack \
+	$(buf.path)/root \
 	$(buf.root)/buf.yaml
 
 $(buf.path)/:
 	mkdir -p $@
 	touch $@
 
-$(buf.path)/hack: | $(buf.path)/
+$(buf.path)/root: | $(buf.path)/
 	rm -f $@ && ln -sf .. $@
 
 $(buf.root)/buf.yaml: | $(buf.path)/
 	echo 'build:' > $@
 	echo '  roots:' >> $@
 	echo '    - .buf/googleapis' >> $@
-	echo '    - .buf/hack' >> $@
+	echo '    - .buf/root' >> $@
 	echo 'lint:' >> $@
 	echo '  use:' >> $@
 	echo '    - BASIC' >> $@
