@@ -34,7 +34,7 @@ clean.brew:
 	trash \
 	trash.brew
 
-trash: trash.brew
+trash:
 trash.brew: clean.brew
 	sudo ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 	sudo rm -rf $(brew.path)
