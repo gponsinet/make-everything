@@ -88,9 +88,7 @@ $(yarn.path)/package.json: | \
 	touch $@
 
 $(yarn.path)/%/package.json: | $(yarn.path)/%/
-	[ -e "$@" ] || \
-		jq -n '.name = "$(call ask,yarn,$*/package-name,$(shell basename $(PWD)))"' \
-			> $@
+	[ -e "$@" ] || npm init
 	touch $@
 
 $(yarn.path)/%/:
