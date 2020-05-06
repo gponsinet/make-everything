@@ -18,15 +18,12 @@ yarn.packages = $(filter-out $(yarn.root), \
 		find $(yarn.root) -name package.json -not -path "*/node_modules/*" \
 	))) \
 )
-yarn.root.mod := $(yarn.root)/node_modules
-yarn.root.bin := $(yarn.mod)/.bin
+yarn.mod := $(yarn.root)/node_modules
+yarn.bin := $(yarn.mod)/.bin
 
 yarn.package := .
-yarn.package.mod := $(yarn.package)/node_modules
-yarn.package.bin := $(yarn.package.mod)/.bin
 
-
-export PATH := $(yarn.root.bin):$(yarn.global.bin):$(PATH)
+export PATH := $(yarn.bin):$(yarn.global.bin):$(PATH)
 
 .PHONY: \
 	install \

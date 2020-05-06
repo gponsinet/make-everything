@@ -26,7 +26,7 @@ install.protoc.json: \
 install.protoc.hbs: \
 	install.protoc \
 	$(brew.cellar)/yarn \
-	$(yarn.root)/node_modules/protoc-gen-hbs
+	$(yarn.mod)/protoc-gen-hbs
 
 .PHONY: \
 	clean \
@@ -70,9 +70,9 @@ protoc.json/output_files ?= \
 	)
 
 protoc.hbs/template_dir ?= ./templates
-protoc.hbs/template_files ?= $(shell find . $(template_dir) -type f -name '*.hbs')
+protoc.hbs/template_files ?= $(shell find . $(protoc.hbs/template_dir) -type f -name '*.hbs')
 protoc.hbs/output_dir ?= $(protoc/output_dir)
-protoc.hbs/output_files ?= $(template_dir)/.generated
+protoc.hbs/output_files ?= $(protoc.hbs/template_dir)/.generated
 
 gen:
 gen.protoc: \
