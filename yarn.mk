@@ -5,26 +5,39 @@ include $(dir $(yarn.mk))/global/config.mk
 include $(dir $(yarn.mk))/global/helper.mk
 include $(dir $(yarn.mk))/brew.mk
 
-yarn.path := $(patsubst %/,%,$(or $(dir $(shell \
+yarn.global := $(HOME)/.config/yarn/global
+yarn.global.mod := $(yarn.global)/node_modules
+yarn.global.bin := $(yarn.global.mod)/.bin
+
+yarn.root := $(patsubst %/,%,$(or $(dir $(shell \
 	$(call find_up_last,package.json) \
 )),$(PWD)))
-yarn.packages = $(filter-out $(yarn.path), \
+yarn.packages = $(filter-out $(yarn.root), \
 	$(PWD) \
 	$(patsubst %/,%,$(dir $(shell \
-		find $(yarn.path) -name package.json -not -path "*/node_modules/*" \
+		find $(yarn.root) -name package.json -not -path "*/node_modules/*" \
 	))) \
 )
+yarn.root.mod := $(yarn.root)/node_modules
+yarn.root.bin := $(yarn.mod)/.bin
 
-export PATH := $(yarn.path)/node_modules/.bin:$(PATH)
+yarn.package := .
+yarn.package.mod := $(yarn.package)/node_modules
+yarn.package.bin := $(yarn.package.mod)/.bin
+
+
+export PATH := $(yarn.root.bin):$(yarn.global.bin):$(PATH)
 
 .PHONY: \
 	install \
-	install.yarn
+	install.yarn \
+	install.yarn.workspace
 
 install: install.yarn
 
-install.yarn: install.brew
-install.yarn: $(yarn.path)/yarn.lock
+install.yarn: $(brew.cellar)/yarn
+install.yarn.workspace: $(yarn.root)/yarn.lock
+install.yarn.package: package.json
 
 .IGNORE \
 .PHONY: \
@@ -43,43 +56,43 @@ clean.yarn:
 		package.json-tmp \
 		node_modules \
 		$(shell find . -type f -name package.json-tmp) \
-		$(shell find . -type f -name node_modules) \
+		$(shell find . -type f -name node_modules)
 
 .IGNORE \
 .PHONY: trash.yarn
 
-trash: trash.brew
+trash:
 trash.brew: trash.yarn
 trash.yarn: clean.yarn
-	[ "$(PWD)" != "$(yarn.path)" ] || brew uninstall yarn
+	[ "$(PWD)" != "$(yarn.root)" ] || brew uninstall yarn
 	rm -rf $(shell find . -type f -name package.json)
 
-$(yarn.path)/yarn.lock: \
+$(yarn.root)/yarn.lock: \
 		package.json \
-		$(yarn.path)/package.json \
+		$(yarn.root)/package.json \
 		$(addsuffix /package.json,$(yarn.packages)) \
 		| \
-		$(yarn.path)/.yarnrc.yml
+		$(yarn.root)/.yarnrc.yml
 	yarn
 	touch $@
 
-package.json: $(yarn.path)/package.json
-	package=$(patsubst $(yarn.path)/%,./%,$(PWD)); \
-	jq ".workspaces -= [\"$$package\"]" $(yarn.path)/package.json > $(yarn.path)/package.json-tmp; \
-	jq ".workspaces += [\"$$package\"]" $(yarn.path)/package.json-tmp > $(yarn.path)/package.json; \
-	rm $(yarn.path)/package.json-tmp
+package.json: $(yarn.root)/package.json
+	package=$(patsubst $(yarn.root)/%,./%,$(PWD)); \
+	jq ".workspaces -= [\"$$package\"]" $(yarn.root)/package.json > $(yarn.root)/package.json-tmp; \
+	jq ".workspaces += [\"$$package\"]" $(yarn.root)/package.json-tmp > $(yarn.root)/package.json; \
+	rm $(yarn.root)/package.json-tmp
 	touch $@
 
-$(yarn.path)/package.json: | \
-		$(brew.path)/Cellar/node \
-		$(brew.path)/Cellar/yarn \
-		$(brew.path)/Cellar/jq \
+$(yarn.root)/package.json: | \
+		$(brew.cellar)/node \
+		$(brew.cellar)/yarn \
+		$(brew.cellar)/jq \
 		$(addsuffix /package.json,$(yarn.packages))
 	[ -e "$@" ] || yarn init
 	jq '.workspaces = []' $@ > $@-tmp
 	jq '.private = true' $@-tmp > $@
 	rm $@-tmp
-	packages="$(patsubst $(yarn.path)/%,./%,$(yarn.packages))"; \
+	packages="$(patsubst $(yarn.root)/%,./%,$(yarn.packages))"; \
 	for package in $$packages; do \
 		jq ".workspaces -= [\"$$package\"]" $@ > $@-tmp; \
 		jq ".workspaces += [\"$$package\"]" $@-tmp > $@; \
@@ -87,19 +100,23 @@ $(yarn.path)/package.json: | \
 	done
 	touch $@
 
-$(yarn.path)/%/package.json: | $(yarn.path)/%/
+ $(yarn.root)/%/package.json: | $(yarn.root)/%/
 	[ -e "$@" ] || npm init
 	touch $@
 
-$(yarn.path)/%/:
+ $(yarn.root)/%/:
 	mkdir -p $@
 
-$(yarn.path)/.yarnrc.yml:
+ $(yarn.root)/.yarnrc.yml:
 	rm -f $@
 	yarn set version berry
 	echo 'nodeLinker: node-modules' >> $@
+	yarn plugin import typescript
 
-$(yarn.path)/node_modules/%:
+ $(yarn.root)/node_modules/%:
 	yarn add $*
+
+$(yarn.global.mod)/%: | install.yarn
+	yarn global add $*
 
 endif # yarn.mk

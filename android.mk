@@ -103,9 +103,9 @@ trash.android: clean.android
 	rm -rf $(android.path)
 
 $(android.path): | \
-		$(brew.path)/Cellar/wget \
-		$(brew.path)/Cellar/unzip \
-		$(brew.path)/Cellar/adoptopenjdk
+		$(brew.cellar)/wget \
+		$(brew.cellar)/unzip \
+		$(brew.cellar)/adoptopenjdk
 	mkdir -p $@
 
 $(android.path)/tools: | $(android.path)
@@ -132,7 +132,7 @@ $(android.path)/emulator: | $(android.path)/tools $(android.path)/licenses
 $(android.path)/system-images/%: | $(android.path)/tools $(android.path)/licenses
 	sdkmanager --sdk_root=$(ANDROID_HOME) 'system-images;$(subst /,;,$*)' || (rm -rf $@ && false)
 
-$(brew.path)/Cellar/adoptopenjdk:
+$(brew.cellar)/adoptopenjdk:
 	brew install adoptopenjdk@8
 
 endif # android.mk

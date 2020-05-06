@@ -10,9 +10,9 @@ include $(dir $(pbhbs.mk))/yarn.mk
 
 install: install.pbhbs
 install.pbhbs: install.yarn \
-	$(yarn.path)/node_modules/pbhbs \
-	$(yarn.path)/node_modules/@protocolbuffers/protobuf \
-	$(yarn.path)/node_modules/@googleapis/googleapis
+	$(yarn.root)/node_modules/pbhbs \
+	$(yarn.root)/node_modules/@protocolbuffers/protobuf \
+	$(yarn.root)/node_modules/@googleapis/googleapis
 
 .IGNORE \
 .PHONY: \
@@ -23,7 +23,7 @@ clean: clean.pbhbs
 clean.yarn: clean.pbhbs
 clean.pbhbs:
 	yarn remove pbhbs
-	rm -rf $(yarn.path)/node_modules @protocolbuffers $(yarn.path)/@googleapis
+	rm -rf $(yarn.root)/node_modules @protocolbuffers $(yarn.root)/@googleapis
 
 .IGNORE \
 .PHONY: \
@@ -43,21 +43,21 @@ gen.pbhbs: \
 proto-paths = $(subst $(shell echo ","), ,$(call ask,pbhbs,proto-paths,.))
 gen.pbhbs:
 	pbhbs \
-		-p $(yarn.path)/node_modules/@protocolbuffers/protobuf/src \
-		-p $(yarn.path)/node_modules/@googleapis/googleapis \
+		-p $(yarn.root)/node_modules/@protocolbuffers/protobuf/src \
+		-p $(yarn.root)/node_modules/@googleapis/googleapis \
 		$(foreach proto-path,$(proto-paths),-p $(proto-path)) \
 		--template-dir $(call ask,pbhbs,template-dir,./template) \
 		--output-dir $(call ask,pbhbs,output-dir,.) \
 		$(shell find $(proto-paths) -type f -name '*.proto')
 
-$(yarn.path)/node_modules/pbhbs:
+$(yarn.root)/node_modules/pbhbs:
 	yarn add pbhbs@latest
 
-$(yarn.path)/node_modules/@protocolbuffers/protobuf:
+$(yarn.root)/node_modules/@protocolbuffers/protobuf:
 	mkdir $(dir $@)
 	git clone --depth 1 https://github.com/protocolbuffers/protobuf --branch v3.11.4 $@
 
-$(yarn.path)/node_modules/@googleapis/googleapis:
+$(yarn.root)/node_modules/@googleapis/googleapis:
 	mkdir $(dir $@)
 	git clone --depth 1 https://github.com/googleapis/googleapis --branch common-protos-1_3_1 $@
 

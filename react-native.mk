@@ -78,7 +78,7 @@ debug.react-native: debug.react-native.android
 debug.react-native.android: install.react-native.android
 
 debug.react-native.android:
-	cd .react-native && $(yarn.path)/node_modules/.bin/react-native run-android \
+	cd .react-native && $(yarn.root)/node_modules/.bin/react-native run-android \
 		--variant debug \
 		--port '$(call ask,react-native,watch-port,8081)'
 
@@ -91,24 +91,24 @@ release.react-native.android: install.react-native.android
 	# todo
 
 react-native/package := $(shell \
-	jq .workspaces $(yarn.path)/package.json \
+	jq .workspaces $(yarn.root)/package.json \
 	| grep '$(shell \
-			echo $(PWD) | sed "s|^$(yarn.path)\(.*\)|.\1/.react-native|" \
+			echo $(PWD) | sed "s|^$(yarn.root)\(.*\)|.\1/.react-native|" \
 		)' \
 )
 ifndef react-native/package
 # permit to add .react-native/ as workspace package
-$(yarn.path)/package.json: $(PWD)/.react-native/package.json
+$(yarn.root)/package.json: $(PWD)/.react-native/package.json
 $(PWD)/.react-native/package.json: $(PWD)/.react-native/
 	touch $@
 endif
 
 .react-native/index.js: | \
-		$(yarn.path)/package.json \
-		$(yarn.path)/node_modules/.bin/react-native
+		$(yarn.root)/package.json \
+		$(yarn.root)/node_modules/.bin/react-native
 	rm -rf $(dir $@)
-	chmod +x $(yarn.path)/node_modules/.bin/react-native
-	$(yarn.path)/node_modules/.bin/react-native init \
+	chmod +x $(yarn.root)/node_modules/.bin/react-native
+	$(yarn.root)/node_modules/.bin/react-native init \
 		'$(call ask,react-native,project-name,RNApp)' \
 		--title '$(call ask,react-native,app-title,$(react-native/project-name))' \
 		--directory '$(dir $@)' \
@@ -116,10 +116,10 @@ endif
 			template,react-native-template-typescript)'
 	touch $@
 
-$(yarn.path)/node_modules/.bin/react-native: | $(yarn.path)/yarn.lock
+$(yarn.root)/node_modules/.bin/react-native: | $(yarn.root)/yarn.lock
 	yarn add react-native
 
 .react-native/node_modules:
-	ln -sf $(yarn.path)/node_modules $@
+	ln -sf $(yarn.root)/node_modules $@
 
 endif # react-native.mk

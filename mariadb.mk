@@ -10,7 +10,7 @@ include $(dir $(mariadb.mk))/brew.mk
 	install.mariadb
 
 install: install.mariadb
-install.mariadb: $(brew.path)/Cellar/mariadb .mariadb
+install.mariadb: $(brew.cellar)/mariadb .mariadb
 
 .IGNORE \
 .PHONY: \

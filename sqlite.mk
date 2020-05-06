@@ -10,7 +10,7 @@ include $(dir $(sqlite.mk))/brew.mk
 	install.sqlite
 
 install: install.sqlite
-install.sqlite: $(brew.path)/Cellar/sqlite .sqlite
+install.sqlite: $(brew.cellar)/sqlite .sqlite
 
 .IGNORE \
 .PHONY: \
