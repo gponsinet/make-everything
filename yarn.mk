@@ -65,52 +65,36 @@ trash.yarn: clean.yarn
 	rm -rf $(shell find . -type f -name package.json)
 
 $(yarn.root)/yarn.lock: \
-		package.json \
-		$(yarn.root)/package.json \
-		$(addsuffix /package.json,$(yarn.packages)) \
-		| \
-		$(yarn.root)/.yarnrc.yml
+	$(yarn.root)/.yarnrc.yml \
+	$(yarn.root)/package.json
 	yarn
 	touch $@
 
-package.json: $(yarn.root)/package.json
-	package=$(patsubst $(yarn.root)/%,./%,$(PWD)); \
-	jq ".workspaces -= [\"$$package\"]" $(yarn.root)/package.json > $(yarn.root)/package.json-tmp; \
-	jq ".workspaces += [\"$$package\"]" $(yarn.root)/package.json-tmp > $(yarn.root)/package.json; \
-	rm $(yarn.root)/package.json-tmp
-	touch $@
+package.json:
+	npm init
 
-$(yarn.root)/package.json: | \
-		$(brew.cellar)/node \
+$(yarn.root)/package.json: $(yarn.packages) \
+	|	$(brew.cellar)/node \
 		$(brew.cellar)/yarn \
-		$(brew.cellar)/jq \
-		$(addsuffix /package.json,$(yarn.packages))
-	[ -e "$@" ] || yarn init
+		$(brew.cellar)/jq
+	[ -e "$@" ] || npm init
 	jq '.workspaces = []' $@ > $@-tmp
 	jq '.private = true' $@-tmp > $@
-	rm $@-tmp
 	packages="$(patsubst $(yarn.root)/%,./%,$(yarn.packages))"; \
 	for package in $$packages; do \
 		jq ".workspaces -= [\"$$package\"]" $@ > $@-tmp; \
 		jq ".workspaces += [\"$$package\"]" $@-tmp > $@; \
-		rm $@-tmp; \
 	done
+	rm $@-tmp
 	touch $@
 
- $(yarn.root)/%/package.json: | $(yarn.root)/%/
-	[ -e "$@" ] || npm init
-	touch $@
-
- $(yarn.root)/%/:
-	mkdir -p $@
-
- $(yarn.root)/.yarnrc.yml:
+$(yarn.root)/.yarnrc.yml:
 	rm -f $@
 	yarn set version berry
 	echo 'nodeLinker: node-modules' >> $@
 	yarn plugin import typescript
 
- $(yarn.root)/node_modules/%:
+$(yarn.root)/node_modules/%:
 	yarn add $*
 
 $(yarn.global.mod)/%: | install.yarn
