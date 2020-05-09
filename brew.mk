@@ -9,7 +9,7 @@ ifdef $(or $(global/system/linux), $(global/system/darwin))
 ifdef global/system/linux
 brew.path := /home/linuxbrew/.linuxbrew
 else ifdef global/system/darwin
-brew.path := /usr/local/homebrew
+brew.path := /usr/local
 endif
 brew.cellar := $(brew.path)/Cellar
 brew.tap := $(brew.path)/Homebrew/Library/Taps
