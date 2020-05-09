@@ -57,6 +57,24 @@ trash.git.hooks:
 	rm $(git.hooks)
 	.git/hooks/applypatch-msg \
 
+.PHONY: \
+	git.hooks.commit-msg \
+	git.hooks.post-applypatch \
+	git.hooks.post-checkout \
+	git.hooks.post-commit \
+	git.hooks.post-merge \
+	git.hooks.post-receive \
+	git.hooks.post-rewrite \
+	git.hooks.post-update \
+	git.hooks.pre-applypatch \
+	git.hooks.pre-auto-gc \
+	git.hooks.pre-commit \
+	git.hooks.pre-push \
+	git.hooks.pre-rebase \
+	git.hooks.pre-receive \
+	git.hooks.prepare-commit-msg \
+	git.hooks.update
+
 git.hooks.commit-msg \
 git.hooks.post-applypatch \
 git.hooks.post-checkout \
