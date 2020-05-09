@@ -4,13 +4,6 @@ git-hooks.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 include $(dir $(git-hooks.mk))/global/config.mk
 include $(dir $(git-hooks.mk))/global/helper.mk
 
-.PHONY: \
-	install \
-	install.git.hooks
-
-install: install.git.hooks
-install.git.hooks: $(git.hooks)
-
 git.hooks := \
 	.git/hooks/applypatch-msg \
 	.git/hooks/commit-msg \
@@ -29,6 +22,13 @@ git.hooks := \
 	.git/hooks/pre-receive \
 	.git/hooks/prepare-commit-msg \
 	.git/hooks/update
+
+.PHONY: \
+	install \
+	install.git.hooks
+
+install: install.git.hooks
+install.git.hooks: $(git.hooks)
 
 .git/hooks: $(git-hooks.mk)
 	mkdir -p $@
