@@ -64,7 +64,7 @@ trash.yarn: clean.yarn
 	rm -rf $(shell find . -type f -name package.json)
 
 $(yarn.root)/yarn.lock: \
-	$(yarn.root)/.yarnrc.yml \
+	$(yarn.root)/.yarn \
 	$(yarn.root)/package.json
 	yarn
 	touch $@
@@ -86,6 +86,8 @@ $(yarn.root)/package.json: $(yarn.pkgs) \
 	done
 	rm $@-tmp
 	touch $@
+
+$(yarn.root)/.yarn: $(yarn.root)/.yarnrc.yml
 
 $(yarn.root)/.yarnrc.yml:
 	rm -f $@
