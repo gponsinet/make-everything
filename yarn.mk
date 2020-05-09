@@ -12,16 +12,15 @@ yarn.global.bin := $(yarn.global.mod)/.bin
 yarn.root := $(patsubst %/,%,$(or $(dir $(shell \
 	$(call find_up_last,package.json) \
 )),$(PWD)))
-yarn.packages = $(filter-out $(yarn.root), \
+yarn.pkgs = $(filter-out $(yarn.root), \
 	$(PWD) \
 	$(patsubst %/,%,$(dir $(shell \
-		find $(yarn.root) -name package.json -not -path "*/node_modules/*" \
+		find $(yarn.root) -maxdepth 2 -type f -name package.json -not -path "*/node_modules/*" \
 	))) \
 )
 yarn.mod := $(yarn.root)/node_modules
 yarn.bin := $(yarn.mod)/.bin
-
-yarn.package := .
+yarn.pkg := .
 
 export PATH := $(yarn.bin):$(yarn.global.bin):$(PATH)
 
@@ -34,7 +33,7 @@ install: install.yarn
 
 install.yarn: $(brew.cellar)/yarn
 install.yarn.workspace: $(yarn.root)/yarn.lock
-install.yarn.package: package.json
+install.yarn.pkg: package.json
 
 .IGNORE \
 .PHONY: \
@@ -73,14 +72,14 @@ $(yarn.root)/yarn.lock: \
 package.json:
 	npm init
 
-$(yarn.root)/package.json: $(yarn.packages) \
+$(yarn.root)/package.json: $(yarn.pkgs) \
 	|	$(brew.cellar)/node \
 		$(brew.cellar)/yarn \
 		$(brew.cellar)/jq
 	[ -e "$@" ] || npm init
 	jq '.workspaces = []' $@ > $@-tmp
 	jq '.private = true' $@-tmp > $@
-	packages="$(patsubst $(yarn.root)/%,./%,$(yarn.packages))"; \
+	packages="$(patsubst $(yarn.root)/%,./%,$(yarn.pkgs))"; \
 	for package in $$packages; do \
 		jq ".workspaces -= [\"$$package\"]" $@ > $@-tmp; \
 		jq ".workspaces += [\"$$package\"]" $@-tmp > $@; \
