@@ -42,6 +42,7 @@ trash.brew: clean.brew
 $(brew.path):
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
+$(brew.cellar)/%: options ?=
 $(brew.cellar)/%: $(brew.path)
 	brew install $* $(options)
 
