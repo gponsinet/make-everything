@@ -25,8 +25,8 @@ reveal: reveal.git.secret
 reveal.git.secret:
 
 ifdef git-hooks.mk
-git.hooks.pre-commit: git.secret.hide
-git.hooks.post-merge: git.secret.reveal
+git.hooks.pre-commit: hide.git.secret
+git.hooks.post-merge: reveal.git.secret
 endif
 
 endif # git-secret.mk
