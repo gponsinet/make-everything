@@ -63,9 +63,7 @@ trash.yarn: clean.yarn
 	[ "$(PWD)" != "$(yarn.root)" ] || brew uninstall yarn
 	rm -rf $(shell find . -type f -name package.json)
 
-$(yarn.root)/yarn.lock: \
-	$(yarn.root)/.yarn \
-	$(yarn.root)/package.json
+$(yarn.root)/yarn.lock: $(yarn.root)/.yarn
 	yarn
 	touch $@
 
@@ -89,7 +87,7 @@ $(yarn.root)/package.json: $(yarn.pkgs) \
 
 $(yarn.root)/.yarn: $(yarn.root)/.yarnrc.yml
 
-$(yarn.root)/.yarnrc.yml:
+$(yarn.root)/.yarnrc.yml: | $(yarn.root)/package.json
 	rm -f $@
 	yarn set version berry
 	echo 'nodeLinker: node-modules' >> $@
