@@ -35,7 +35,7 @@ install.git.hooks: $(git.hooks)
 	touch $@
 
 .git/hooks/%: .git/hooks $(git-hooks.mk)
-	echo "/usr/bin/env bash" > $@
+	echo "#!/usr/bin/env bash" > $@
 	echo "make git.hooks.$*" >> $@
 	chmod +x $@
 

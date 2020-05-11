@@ -1,7 +1,7 @@
 ifndef git.secret.mk
 git-secret.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(git-secret))
+include $(dir $(git-secret.mk))/git-hooks.mk
 
 .PHONY: \
 	install \
