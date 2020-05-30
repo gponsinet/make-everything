@@ -15,7 +15,10 @@ install: install.spacevim
 install.spacevim: \
 	$(brew.cellar)/neovim \
 	$(HOME)/.SpaceVim \
+	$(brew.cellar)/msgpack \
+	$(brew.cellar)/python \
 	$(brew.cellar)/global \
+	$(yarn.global.mod)/neovim \
 	$(yarn.global.mod)/import-js \
 	$(yarn.global.mod)/javascript-typescript-langserver \
 	$(yarn.global.mod)/typescript \
