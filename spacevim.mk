@@ -14,16 +14,10 @@ include $(dir $(spacevim.mk))/yarn.mk
 install: install.spacevim
 install.spacevim: \
 	$(brew.cellar)/neovim \
-	$(HOME)/.SpaceVim
-install.spacevim.gtags: \
-	install.spacevim \
-	$(brew.cellar)/global
-install.spacevim.js: \
-	install.spacevim.gtags \
+	$(HOME)/.SpaceVim \
+	$(brew.cellar)/global \
 	$(yarn.global.mod)/import-js \
-	$(yarn.global.mod)/javascript-typescript-langserver
-install.spacevim.ts: \
-	install.spacevim \
+	$(yarn.global.mod)/javascript-typescript-langserver \
 	$(yarn.global.mod)/typescript \
 	$(yarn.global.mod)/javascript-typescript-langserver \
 	$(yarn.global.mod)/typescript-language-server \
@@ -62,7 +56,7 @@ trash.spacevim: trash.spacevim.gtags trash.spacevim.js
 	curl -sLf https://spacevim.org/install.sh | bash -s -- --uninstall
 	rm -rf ~/.SpaceVim
 	rm -rf ~/.cache/SpaceVim
-	rm -rf ~/.cache/vimfiles/repos
+	rm -rf ~/.cache/vimfiles
 trash.spacevim.gtags:
 trash.spacevim.js:
 	yarn global remove javascript-typescript-langserver
