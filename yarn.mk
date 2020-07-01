@@ -31,7 +31,7 @@ export PATH := $(yarn.bin):$(yarn.global.bin):$(PATH)
 
 install: install.yarn
 
-install.yarn: $(brew.cellar)/yarn
+install.yarn: $(brew.cellar)/yarn $(yarn.root)/yarn.lock
 install.yarn.workspace: $(yarn.root)/yarn.lock
 install.yarn.pkg: package.json
 
