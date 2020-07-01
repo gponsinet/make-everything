@@ -43,7 +43,7 @@ $(brew.path):
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
 $(brew.cellar)/%: options ?=
-$(brew.cellar)/%: $(brew.path)
+$(brew.cellar)/%: | $(brew.path)
 	brew install $* $(options)
 
 $(brew.tap)/%: $(brew.path)
