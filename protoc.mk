@@ -26,7 +26,7 @@ install.protoc.json: \
 install.protoc.hbs: \
 	install.protoc \
 	$(brew.cellar)/yarn \
-	$(yarn.mod)/protoc-gen-hbs
+	$(yarn.global.mod)/protoc-gen-hbs
 
 .PHONY: \
 	clean \
