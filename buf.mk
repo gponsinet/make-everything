@@ -50,11 +50,10 @@ $(buf.root)/buf.yaml: | $(buf.path)/
 	echo '    - WIRE_JSON' >> $@
 
 $(buf.path)/googleapis: $(buf.path)/googleapis/.git | $(buf.path)/
-$(buf.path)/googleapis/.git: path := $(shell realpath --relative-to=$(buf.root) $(buf.path)/googleapis)
+$(buf.path)/googleapis/.git: path := $$(realpath --relative-to=$(buf.root) $(buf.path)/googleapis)
 $(buf.path)/googleapis/.git:
-	git submodule add https://github.com/googleapis/googleapis $(path)
+	git submodule add https://github.com/googleapis/googleapis $(path) \
 		--branch d4aa417ed2bba89c2d216900282bddfdafef6128 \
-		2>/dev/null \
 		|| git submodule update --init --recursive $(path)
 
 .PHONY: \
