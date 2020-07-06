@@ -2,10 +2,11 @@ ifndef rust.mk
 rust.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 include $(dir $(rust.mk))/global/config.mk
+include $(dir $(rust.mk))/global/helpers.mk
 include $(dir $(rust.mk))/brew.mk
 
 rust.root := $(patsubst %/,%,$(or $(dir $(shell \
-	$(call find_up_last,Cargo.toml) \
+	$(call find_up_first,Cargo.toml) \
 )),$(PWD)))
 rust.global := $(HOME)/.cargo
 rust.global.bin := $(rust.global)/bin
@@ -19,7 +20,18 @@ export PATH := $(rust.global.bin):$(PATH)
 install: install.rust
 install.rust: \
 	$(HOME)/.cargo/bin/rustup \
+	$(rust.global.bin)/cross \
 	$(rust.root)/Cargo.toml
+
+.PHONY: \
+	build \
+	build.rust
+
+build: build.rust
+build.rust: target ?=
+build.rust: verbose ?=
+build.rust: install.rust
+	cross build $(if $(target),--target=$(target)) $(if $(verbose),-vv)
 
 .IGNORE \
 .PHONY: \
@@ -28,7 +40,7 @@ install.rust: \
 
 clean: clean.rust
 clean.rust:
-	cargo clean
+	cross clean
 
 .IGNORE \
 .PHONY: \
@@ -44,5 +56,8 @@ $(HOME)/.cargo/bin/rustup: | $(brew.cellar)/curl
 
 $(rust.root)/Cargo.toml: | $(HOME)/.cargo/bin/rustup
 	cargo init
+
+$(rust.global.bin)/%: $(HOME)/.cargo/bin/rustup
+	cargo install %
 
 endif # rust.mk
