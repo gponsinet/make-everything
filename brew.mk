@@ -3,6 +3,7 @@ brew.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 include $(dir $(brew.mk))/global/config.mk
 include $(dir $(brew.mk))/global/system.mk
+include $(dir $(brew.mk))/ruby.mk
 
 ifdef $(or $(global/system/linux), $(global/system/darwin))
 
@@ -39,7 +40,7 @@ trash.brew: clean.brew
 	sudo ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 	sudo rm -rf $(brew.path)
 
-$(brew.path):
+$(brew.path): install.ruby@2.6
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
 $(brew.cellar)/%: options ?=
