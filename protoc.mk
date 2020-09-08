@@ -55,11 +55,12 @@ trash.protoc:
 	gen.protoc.json
 
 protoc/input_dir ?= $(PWD)
-protoc/input_files ?= $(shell find $(buf.path)/root/ -type f -name '*.proto' -not -path '*/.buf/root/.buf/root//.buf/*')
+protoc/input_files ?= $(shell find $(buf.root) -type f -name '*.proto' -not -path '*/.buf/*')
 protoc/proto-paths ?= \
+	$(buf.root) \
 	$(addprefix $(buf.root)/,$(shell yq '.build.roots | .[]' $(buf.root)/buf.yaml | sed 's/"//g'))
 
-protoc/output_dir ?= $(buf.path)/root
+protoc/output_dir ?= $(buf.root)
 
 protoc.json/output_dir ?= $(protoc/output_dir)
 protoc.json/output_files ?= \
