@@ -46,8 +46,14 @@ $(brew.cellar)/%: options ?=
 $(brew.cellar)/%: | $(brew.path)
 	brew install $* $(options)
 
+ifdef global/system/darwin
+$(brew.tap)/%: $(brew.tap)/homebrew-%
+$(brew.tap)/homebrew-%: $(brew.path)
+	brew tap $@
+else
 $(brew.tap)/%: $(brew.path)
 	brew tap $(subst homebrew-,,$*)
+endif
 
 endif # global/system.mk
 endif # brew.mk
