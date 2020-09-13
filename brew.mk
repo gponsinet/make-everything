@@ -48,10 +48,10 @@ $(brew.cellar)/%: | $(brew.path)
 
 ifdef global/system/darwin
 $(brew.tap)/%: $(brew.tap)/homebrew-%
-$(brew.tap)/homebrew-%: $(brew.path)
+$(brew.tap)/homebrew-%: | $(brew.path)
 	brew tap $@
 else
-$(brew.tap)/%: $(brew.path)
+$(brew.tap)/%: | $(brew.path)
 	brew tap $(subst homebrew-,,$*)
 endif
 
