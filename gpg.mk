@@ -15,17 +15,17 @@ install.gpg: \
 
 .PHONY: \
 	clean \
-	clean.gnupg
+	clean.gpg
 
-clean: clean.gnupg
-clean.gnupg:
+clean: clean.gpg
+clean.gpg:
 
 .PHONY: \
 	trash \
-	trash.gnupg
+	trash.gpg
 
 trash:
-trash.gnupg:
+trash.gpg:
 	brew uninstall gnupg
 
 endif # gpg.mk
