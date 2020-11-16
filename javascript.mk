@@ -1,5 +1,5 @@
 ifndef javascript.mk
-javascript.mk := $(lastword $(MAKEFILE_LIST))
+javascript.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 include $(dir $(javascript.mk))/config.mk
 include $(dir $(javascript.mk))/volta.mk

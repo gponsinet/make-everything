@@ -1,5 +1,5 @@
 ifndef babel.mk
-babel.mk := $(lastword $(MAKEFILE_LIST))
+babel.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 include $(dir $(babel.mk))/config.mk
 ifndef yarn.mk
