@@ -1,8 +1,8 @@
 ifndef rust.mk
 rust.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(rust.mk))/global/config.mk
-include $(dir $(rust.mk))/global/helpers.mk
+include $(dir $(rust.mk))/config.mk
+include $(dir $(rust.mk))/helpers.mk
 include $(dir $(rust.mk))/brew.mk
 
 rust.root := $(patsubst %/,%,$(or $(dir $(shell \
@@ -51,7 +51,7 @@ trash: trash.rust
 trash.rust: clean.rust
 	rustup self uninstall
 
-$(HOME)/.cargo/bin/rustup: | $(brew.cellar)/curl
+$(HOME)/.cargo/bin/rustup: | $(BREW_HOME)/Cellar/curl
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 $(rust.root)/Cargo.toml: | $(HOME)/.cargo/bin/rustup

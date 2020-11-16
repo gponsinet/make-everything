@@ -1,25 +1,26 @@
 ifndef brew.mk
 brew.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(brew.mk))/global/config.mk
-include $(dir $(brew.mk))/global/system.mk
+include $(dir $(brew.mk))/config.mk
+include $(dir $(brew.mk))/system.mk
 
-ifdef $(or $(global/system/linux), $(global/system/darwin))
+ifdef $(or $(system/linux), $(system/darwin))
 
-ifdef global/system/linux
-brew.path := /home/linuxbrew/.linuxbrew
-else ifdef global/system/darwin
-brew.path := /usr/local
+ifdef system/linux
+BREW_HOME := /home/linuxbrew/.linuxbrew
+export PATH := $(BREW_HOME)/bin:$(PATH)
+else ifdef system/darwin
+BREW_HOME := /usr/local
 endif
-brew.cellar := $(brew.path)/Cellar
-brew.tap := $(brew.path)/Homebrew/Library/Taps
+brew.cellar := $(BREW_HOME)/Cellar
+brew.tap := $(BREW_HOME)/Homebrew/Library/Taps
 
 .PHONY: \
 	install \
 	install.brew
 
 install: install.brew
-install.brew: $(brew.path)
+install.brew: $(BREW_HOME)
 
 .IGNORE \
 .PHONY: \
@@ -37,23 +38,23 @@ clean.brew:
 trash:
 trash.brew: clean.brew
 	sudo ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
-	sudo rm -rf $(brew.path)
+	sudo rm -rf $(BREW_HOME)
 
-$(brew.path):
+$(BREW_HOME):
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-$(brew.cellar)/%: options ?=
-$(brew.cellar)/%: | $(brew.path)
+$(BREW_HOME)/Cellar/%: options ?=
+$(BREW_HOME)/Cellar/%: | $(BREW_HOME)
 	brew install $* $(options)
 
-ifdef global/system/darwin
+ifdef system/darwin
 $(brew.tap)/%: $(brew.tap)/homebrew-%
-$(brew.tap)/homebrew-%: | $(brew.path)
+$(brew.tap)/homebrew-%: | $(BREW_HOME)
 	brew tap $@
 else
-$(brew.tap)/%: | $(brew.path)
+$(brew.tap)/%: | $(BREW_HOME)
 	brew tap $(subst homebrew-,,$*)
 endif
 
-endif # global/system.mk
+endif # system.mk
 endif # brew.mk

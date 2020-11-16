@@ -1,9 +1,9 @@
 ifndef react-native.mk
 react-native.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(react-native.mk))/global/config.mk
-include $(dir $(react-native.mk))/global/system.mk
-include $(dir $(react-native.mk))/global/helper.mk
+include $(dir $(react-native.mk))/config.mk
+include $(dir $(react-native.mk))/system.mk
+include $(dir $(react-native.mk))/helper.mk
 include $(dir $(react-native.mk))/yarn.mk
 include $(dir $(react-native.mk))/android.mk
 

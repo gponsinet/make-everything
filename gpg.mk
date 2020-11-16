@@ -1,8 +1,8 @@
 ifndef gpg.mk
 gpg.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(gpg.mk))/global/config.mk
-include $(dir $(gpg.mk))/global/system.mk
+include $(dir $(gpg.mk))/config.mk
+include $(dir $(gpg.mk))/system.mk
 include $(dir $(gpg.mk))/brew.mk
 
 .PHONY: \
@@ -11,7 +11,7 @@ include $(dir $(gpg.mk))/brew.mk
 
 install: install.gpg
 install.gpg: \
-	$(brew.cellar)/gnupg
+	$(BREW_HOME)/Cellar/gnupg
 
 .PHONY: \
 	clean \

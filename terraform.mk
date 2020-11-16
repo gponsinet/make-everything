@@ -9,7 +9,7 @@ include $(dir $(terraform.mk))/brew.mk
 
 install: install.terraform
 install.terraform: \
-	$(brew.cellar)/terraform
+	$(BREW_HOME)/Cellar/terraform
 
 .IGNORE \
 .PHONY: \

@@ -9,8 +9,8 @@ include $(dir $(k8s.mk))/brew.mk
 
 install: install.k8s
 install.k8s: \
-	$(brew.cellar)/kubernetes-cli \
-	$(brew.cellar)/minikube
+	$(BREW_HOME)/Cellar/kubernetes-cli \
+	$(BREW_HOME)/Cellar/minikube
 
 .IGNORE \
 .PHONY: \

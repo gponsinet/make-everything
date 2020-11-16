@@ -1,7 +1,7 @@
 ifndef ssh.mk
 ssh.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(ssh.mk))/global/config.mk
+include $(dir $(ssh.mk))/config.mk
 include $(dir $(ssh.mk))/brew.mk
 
 .PHONY: \
@@ -10,7 +10,7 @@ include $(dir $(ssh.mk))/brew.mk
 
 install: install.ssh
 install.ssh: \
-	$(brew.cellar)/openssh
+	$(BREW_HOME)/Cellar/openssh
 
 .PHONY: \
 	clean \

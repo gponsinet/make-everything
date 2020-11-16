@@ -1,7 +1,7 @@
 ifndef ruby.mk
 ruby.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(ruby.mk))/global/config.mk
+include $(dir $(ruby.mk))/config.mk
 include $(dir $(ruby.mk))/brew.mk
 
 .PHONY: \
@@ -9,6 +9,6 @@ include $(dir $(ruby.mk))/brew.mk
 	install.ruby
 
 install: install.ruby
-install.ruby: $(brew.cellar)/ruby
+install.ruby: $(BREW_HOME)/Cellar/ruby
 
 endif # ruby.mk

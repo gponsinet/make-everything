@@ -1,26 +1,30 @@
 ifndef go.mk
 go.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(go.mk))/global/config.mk
-include $(dir $(go.mk))/global/helper.mk
+include $(dir $(go.mk))/config.mk
 include $(dir $(go.mk))/brew.mk
 
-go.path := $(HOME)/.go
-go.src := $(go.path)/src
-go.bin := $(go.path)/bin
-
-export GOPATH := $(go.path)
+export GOPATH := $(HOME)/.go
 export GO111MODULE=auto
-export PATH := $(go.bin):$(PATH)
+export PATH := $(GOPATH)/bin:$(PATH)
 
 .PHONY: \
 	install \
 	install.go
 
 install: install.go
-install.go: $(brew.cellar)/go
+install.go: $(BREW_HOME)/Cellar/go
 
-$(go.src)/%:
+$(GOPATH)/src/%: | install.go
 	go get -u $*
+
+.PHONY: \
+	trash \
+	trash.go
+
+trash: trash.go
+trash.brew: trash.go
+trash.go:
+	rm -rf $(GOPATH)
 
 endif # go.mk

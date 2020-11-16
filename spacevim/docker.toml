@@ -1,0 +1,11 @@
+[[layers]]
+  name = "format"
+
+[[layers]]
+  name = "lang#dockerfile"
+
+[[layers]]
+  name = "lsp"
+  filetypes = ["dockerfile"]
+
+

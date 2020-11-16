@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@babel/preset-flow": "latest",
+    "flow-bin": "latest"
+  }
+}

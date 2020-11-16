@@ -1,4 +1,4 @@
-# make-everything
+# dotmk
 :muscle: Preconfigured .mk files to improve your productivity
 
 ## Warning
@@ -10,13 +10,13 @@ This code is currently not stable, please creates issues and tell me what you wa
 ### In your home directory
 
 ```bash
-git clone git@github.com:gponsinet/make-everythings ~/.mk
+git clone git@github.com:dotmk/dotmk ~/.mk
 ```
 
 ### With submodules
 
 ```bash
-git submodule add git@github.com:gponsinet/make-everythings .mk
+git submodule add git@github.com:dotmk/dotmk .mk
 ```
 
 ## Usage

@@ -1,5 +1,5 @@
-ifndef global/helper.mk
-global/helper.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+ifndef helper.mk
+helper.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 find_up = \
 	while true; \
@@ -36,4 +36,4 @@ select = $(or $($(strip $(1))/$(strip $(2))),$(strip \
 
 json_merge = jq -s ".[0] * .[1]" $(1) $(2) > $(1)-merged && mv $(1)-merged $(1)
 
-endif # global/helper.mk
+endif # helper.mk

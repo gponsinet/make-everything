@@ -1,8 +1,8 @@
 ifndef mariadb.mk
 mariadb.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(mariadb.mk))/global/config.mk
-include $(dir $(mariadb.mk))/global/helper.mk
+include $(dir $(mariadb.mk))/config.mk
+include $(dir $(mariadb.mk))/helper.mk
 include $(dir $(mariadb.mk))/brew.mk
 
 .PHONY: \
@@ -10,7 +10,7 @@ include $(dir $(mariadb.mk))/brew.mk
 	install.mariadb
 
 install: install.mariadb
-install.mariadb: $(brew.cellar)/mariadb .mariadb
+install.mariadb: $(BREW_HOME)/Cellar/mariadb .mariadb
 
 .IGNORE \
 .PHONY: \

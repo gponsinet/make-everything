@@ -1,8 +1,8 @@
 ifndef docker.mk
 docker.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(docker.mk))/global/config.mk
-include $(dir $(docker.mk))/global/system.mk
+include $(dir $(docker.mk))/config.mk
+include $(dir $(docker.mk))/system.mk
 
 .PHONY: \
 	install \

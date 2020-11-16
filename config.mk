@@ -1,7 +1,7 @@
-ifndef global/config.mk
-global/config.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+ifndef config.mk
+config.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(global/config.mk))/print.mk
+include $(dir $(config.mk))/system.mk
 
 SHELL := bash
 

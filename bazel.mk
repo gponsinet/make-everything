@@ -1,15 +1,17 @@
 ifndef bazel.mk
 bazel.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(bazel.mk))/global/config.mk
+include $(dir $(bazel.mk))/config.mk
 include $(dir $(bazel.mk))/brew.mk
+
+bazel := $(BREW_HOME)/Cellar/bazel
 
 .PHONY: \
 	install \
 	install.bazel
 
 install: install.bazel
-install.bazel: $(brew.cellar)/bazel
+install.bazel: $(BREW_HOME)/Cellar/bazel
 
 .IGNORE \
 .PHONY: \

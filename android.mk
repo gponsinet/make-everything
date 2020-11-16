@@ -1,22 +1,22 @@
 ifndef android.mk
 android.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(android.mk))/global/config.mk
-include $(dir $(android.mk))/global/system.mk
-include $(dir $(android.mk))/global/helper.mk
+include $(dir $(android.mk))/config.mk
+include $(dir $(android.mk))/system.mk
+include $(dir $(android.mk))/helper.mk
 include $(dir $(android.mk))/brew.mk
 
 android.path :=
 android.tools.href :=
-ifdef global/system/linux
+ifdef system/linux
 android.path := $(HOME)/.android
 android.tools.href := \
 	https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
-else ifdef global/system/darwin
+else ifdef system/darwin
 android.path := $(HOME)/Library/Android/sdk
 android.tools.href := \
 	https://dl.google.com/android/repository/commandlinetools-mac-6200805_latest.zip
-else ifdef global/system/windows
+else ifdef system/windows
 android.tools.href := \
 	https://dl.google.com/android/repository/commandlinetools-win-6200805_latest.zip
 endif
@@ -103,9 +103,9 @@ trash.android: clean.android
 	rm -rf $(android.path)
 
 $(android.path): | \
-		$(brew.cellar)/wget \
-		$(brew.cellar)/unzip \
-		$(brew.cellar)/adoptopenjdk
+		$(BREW_HOME)/Cellar/wget \
+		$(BREW_HOME)/Cellar/unzip \
+		$(BREW_HOME)/Cellar/adoptopenjdk
 	mkdir -p $@
 
 $(android.path)/tools: | $(android.path)
@@ -132,7 +132,7 @@ $(android.path)/emulator: | $(android.path)/tools $(android.path)/licenses
 $(android.path)/system-images/%: | $(android.path)/tools $(android.path)/licenses
 	sdkmanager --sdk_root=$(ANDROID_HOME) 'system-images;$(subst /,;,$*)' || (rm -rf $@ && false)
 
-$(brew.cellar)/adoptopenjdk:
+$(BREW_HOME)/Cellar/adoptopenjdk:
 	brew install adoptopenjdk@8
 
 endif # android.mk

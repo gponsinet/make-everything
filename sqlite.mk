@@ -1,8 +1,8 @@
 ifndef sqlite.mk
 sqlite.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(sqlite.mk))/global/config.mk
-include $(dir $(sqlite.mk))/global/helper.mk
+include $(dir $(sqlite.mk))/config.mk
+include $(dir $(sqlite.mk))/helper.mk
 include $(dir $(sqlite.mk))/brew.mk
 
 .PHONY: \
@@ -10,7 +10,7 @@ include $(dir $(sqlite.mk))/brew.mk
 	install.sqlite
 
 install: install.sqlite
-install.sqlite: $(brew.cellar)/sqlite .sqlite
+install.sqlite: $(BREW_HOME)/Cellar/sqlite .sqlite
 
 .IGNORE \
 .PHONY: \

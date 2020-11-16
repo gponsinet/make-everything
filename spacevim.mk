@@ -1,69 +1,54 @@
 ifndef spacevim.mk
 spacevim.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-include $(dir $(spacevim.mk))/global/config.mk
+include $(dir $(spacevim.mk))/config.mk
 include $(dir $(spacevim.mk))/brew.mk
-include $(dir $(spacevim.mk))/yarn.mk
+include $(dir $(spacevim.mk))/conflate.mk
 
 .PHONY: \
 	install \
-	install.spacevim \
-	install.spacevim.gtags \
-	install.spacevim.js \
+	install.spacevim
 
 install: install.spacevim
+install.spacevim: install.conflate
 install.spacevim: \
-	$(brew.cellar)/neovim \
+	$(BREW_HOME)/Cellar/neovim \
+	$(BREW_HOME)/Cellar/msgpack \
+	$(BREW_HOME)/Cellar/python \
+	$(BREW_HOME)/Cellar/global \
 	$(HOME)/.SpaceVim \
-	$(brew.cellar)/msgpack \
-	$(brew.cellar)/python \
-	$(brew.cellar)/global \
-	$(yarn.global.mod)/neovim \
-	$(yarn.global.mod)/import-js \
-	$(yarn.global.mod)/javascript-typescript-langserver \
-	$(yarn.global.mod)/typescript \
-	$(yarn.global.mod)/javascript-typescript-langserver \
-	$(yarn.global.mod)/typescript-language-server \
+	.SpaceVim.d/init.toml \
+# 	$(yarn.global.mod)/import-js \
+# 	$(yarn.global.mod)/javascript-typescript-langserver \
+# 	$(yarn.global.mod)/typescript \
+# 	$(yarn.global.mod)/javascript-typescript-langserver \
+# 	$(yarn.global.mod)/typescript-language-server 
 
 $(HOME)/.SpaceVim:
 	curl -sLf https://spacevim.org/install.sh | bash
 
-.PHONY: \
-	update \
-	update.spacevim
-
-update: update.spacevim
-update.spacevim:
-	curl -sLf https://spacevim.org/install.sh | bash
+.SpaceVim.d/init.toml:
+	# conflate -o $@ $^
 
 .IGNORE \
 .PHONY: \
 	clean \
-	clean.spacevim \
-	clean.spacevim.js
+	clean.spacevim
 
 clean: clean.spacevim
 clean.spacevim:
-clean.spacevim.gtags:
-clean.spacevim.js:
-clean.spacevim.ts:
 
 .IGNORE \
 .PHONY: \
 	trash \
-	trash.spacevim \
-	trash.spacevim.js
+	trash.spacevim
 
 trash: trash.spacevim
-trash.spacevim: trash.spacevim.gtags trash.spacevim.js
+trash.spacevim:
 	curl -sLf https://spacevim.org/install.sh | bash -s -- --uninstall
 	rm -rf ~/.SpaceVim
 	rm -rf ~/.cache/SpaceVim
 	rm -rf ~/.cache/vimfiles
 trash.spacevim.gtags:
-trash.spacevim.js:
-	yarn global remove javascript-typescript-langserver
-trash.spacevim.ts:
-	yarn global remove javascript-typescript-langserver
 
 endif # spacevim.mk

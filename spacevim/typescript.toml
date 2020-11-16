@@ -1,0 +1,11 @@
+[[layers]]
+  name = "format"
+
+[[layers]]
+  name = "lang#typescript"
+  typescript_server_path = "$VOLTA_HOME/bin/tsserver"
+  format_on_save = true
+
+[[layers]]
+  name = "lsp"
+  filetypes = ["typescript"]
