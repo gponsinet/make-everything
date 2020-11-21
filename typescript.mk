@@ -22,9 +22,16 @@ install.typescript: install.volta
 # trash: trash.typescript
 # trash.volta: trash.typescript
 trash.typescript:
+	volta uninstall typescript typescript-language-server
+ifneq ($(CURDIR),$(HOME))
 	volta uninstall typescript@$(TYPESCRIPT_VERSION) typescript-language-server
+endif
 
+
+ifneq ($(CURDIR),$(HOME))
 package.json: $(dir $(typescript.mk))/typescript/package.json
-.SpaceVim.d: $(dir $(typescript.mk))/typescript/.SpaceVim.d/init.toml
+endif
+
+.SpaceVim.d/init.toml: $(dir $(typescript.mk))/typescript/.SpaceVim.d/init.toml
 
 endif

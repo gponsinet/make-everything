@@ -27,6 +27,10 @@ install.spacevim: \
 $(HOME)/.SpaceVim:
 	curl -sLf https://spacevim.org/install.sh | bash
 
+ifneq ($(CURDIR),$(HOME))
+.SpaceVim.d/init.toml: $(HOME)/.SpaceVim/init.toml
+endif
+
 .SpaceVim.d/init.toml:
 	# conflate -o $@ $^
 

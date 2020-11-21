@@ -3,6 +3,7 @@ docker.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
 
 include $(dir $(docker.mk))/config.mk
 include $(dir $(docker.mk))/system.mk
+include $(dir $(docker.mk))/brew.mk
 
 .PHONY: \
 	install \
@@ -19,7 +20,7 @@ install.docker:
 clean: clean.docker
 clean.docker:
 
-.IGNORE
+.IGNORE \
 .PHONY: \
 	trash \
 	trash.docker

@@ -17,7 +17,9 @@ install: install.npm
 install.npm: install.volta
 install.npm: install.node
 	volta install npm@$(NPM_VERSION)
-	volta pin node@$(NPM_VERSION)
+ifneq ($(CURDIR),$(HOME))
+	volta pin npm@$(NPM_VERSION)
+endif
 
 .IGNORE \
 .PHONY: \
@@ -37,7 +39,12 @@ clean.npm:
 # trash.volta: trash.npm
 trash.node: trash.npm
 trash.npm:
+ifeq ($(CURDIR),$(HOME))
+	volta uninstall npm
+else
 	volta uninstall npm@$(NPM_VERSION)
-	rm package-lock.json
+	volta unpin npm
+endif
+	rm -f package-lock.json
 
 endif

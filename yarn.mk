@@ -16,7 +16,9 @@ yarn := $(VOLTA_HOME)/bin/yarn
 install: install.yarn
 install.yarn: install.volta
 	volta install yarn@$(YARN_VERSION)
+ifneq ($(CURDIR),$(HOME))
 	volta pin yarn@$(YARN_VERSION)
+endif
 
 .IGNORE \
 .PHONY: \
@@ -36,7 +38,12 @@ clean.yarn:
 # trash.volta: trash.yarn
 trash.node: trash.yarn
 trash.npm:
-	volta uninstall yarn@$(NPM_VERSION)
+ifeq ($(CURDIR),$(HOME))
+	volta uninstall yarn
+else
+	volta uninstall yarn@$(YARN_VERSION)
+	volta unpin yarn
+endif
 	rm yarn.lock
 
 endif # yarn.mk

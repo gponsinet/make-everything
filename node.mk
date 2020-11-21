@@ -15,7 +15,13 @@ node := $(VOLTA_HOME)/bin/node
 install: install.node
 install.node: install.volta
 	volta install node@$(NODE_VERSION)
+ifneq ($(CURDIR),$(HOME))
 	volta pin node@$(NODE_VERSION)
+endif
+
+ifneq ($(CURDIR),$(HOME))
+install.node: package.json
+endif
 
 .IGNORE \
 .PHONY: \
@@ -33,6 +39,11 @@ clean.node:
 # trash: trash.node
 # trash.volta: trash.node
 trash.node:
+ifeq ($(CURDIR),$(HOME))
+	volta uninstall node
+else
 	volta uninstall node@$(NODE_VERSION)
+	volta unpin node
+endif
 
 endif

@@ -9,7 +9,9 @@ include $(dir $(conflate.mk))/go.mk
 	install.conflate
 
 install: install.conflate
-install.conflate: \
+install.conflate: $(GOPATH)/bin/conflate
+
+$(GOPATH)/bin/conflate:
 	$(GOPATH)/src/github.com/miracl/conflate/...
 
 .IGNORE: \
