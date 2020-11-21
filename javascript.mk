@@ -33,7 +33,4 @@ endif
 trash.javascript:
 	volta uninstall eslint-cli javascript-typescript-langserver
 
-package.json: $(dir $(javascript.mk))/javascript/package.json
-.SpaceVim.d: $(dir $(javascript.mk))/javascript/.SpaceVim.d/init.toml
-
 endif

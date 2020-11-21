@@ -11,7 +11,7 @@ endif
 	install.node
 
 install: install.babel
-install.babel: package.json
+install.babel:
 
 .IGNORE \
 .PHONY: \
@@ -21,6 +21,11 @@ install.babel: package.json
 trash: trash.babel
 trash.babel:
 
-package.json: $(dir $(typescript.mk))/babel/package.json
+
+ifneq ($(CURDIR),$(HOME))
+package.json: $(dir $(babel.mk))/babel/package.json
+endif
+
+.SpaceVim.d/init.toml: $(dir $(babel.mk))/babel/.SpaceVim.d/init.toml
 
 endif
