@@ -14,7 +14,7 @@ install.spacevim: install.conflate
 install.spacevim: \
 	$(BREW_HOME)/Cellar/neovim \
 	$(BREW_HOME)/Cellar/msgpack \
-	$(BREW_HOME)/Cellar/python \
+	$(BREW_HOME)/Cellar/python@3.9 \
 	$(BREW_HOME)/Cellar/global \
 	$(HOME)/.SpaceVim \
 	.SpaceVim.d/init.toml \

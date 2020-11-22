@@ -48,15 +48,8 @@ $(brew.cellar)/%: | $(BREW_HOME)
 	brew install --force $* $(options)
 	brew link --overwrite $*
 
-ifdef system/darwin
-$(brew.tap)/%: $(brew.tap)/homebrew-%
-	@echo '$@ -> $<'
-$(brew.tap)/homebrew-%: | $(BREW_HOME)
-	brew tap $*
-else
 $(brew.tap)/%: | $(BREW_HOME)
 	brew tap $(subst homebrew-,,$*)
-endif
 
 endif # system.mk
 endif # brew.mk
