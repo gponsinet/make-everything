@@ -12,8 +12,12 @@ include $(dotmk)/go.mk
 install: install.conflate
 install.conflate: $(GOPATH)/bin/conflate
 
-$(GOPATH)/bin/conflate:
-	$(GOPATH)/src/github.com/miracl/conflate/...
+$(GOPATH)/bin/conflate: \
+	$(BREW_HOME)/Cellar/go \
+	$(GOPATH)/src/github.com/miracl/conflate
+
+$(GOPATH)/src/github.com/miracl/conflate:
+	go get -u github.com/miracl/conflate/...
 
 .IGNORE: \
 	trash \
