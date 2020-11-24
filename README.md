@@ -26,3 +26,11 @@ git submodule add git@github.com:dotmk/dotmk .mk
 Exemple: `echo include .mk/brew.mk >> Makefile`
 
 * Then, you can use `make [command]`
+
+## Configuration
+
+### SpaceVim
+
+For spacevim, instead of using .SpaceVim.d/init.toml to make your custom config use .SpaceVim.d/custom.toml,
+    dotmk will merge everything in .SpaceVim.d/init.toml and override default config with your custom one.
+Also, if you use spacevim.mk in project, dotmk will merge your home configuration with the project one.

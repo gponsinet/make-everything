@@ -36,6 +36,6 @@ tsconfig.json:
 endif
 
 package.json: $(dotmk)/typescript/package.json
-.SpaceVim.d/init.toml: $(dotmk)/typescript/.SpaceVim.d/init.toml
+.SpaceVim.d/init.toml: $(dotmk)/typescript/.SpaceVim.d/custom.toml
 
 endif
