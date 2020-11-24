@@ -19,6 +19,7 @@ install.go: $(BREW_HOME)/Cellar/go
 $(GOPATH)/src/%: | install.go
 	go get -u $*
 
+.IGNORE \
 .PHONY: \
 	trash \
 	trash.go

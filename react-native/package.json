@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@tsconfig/react-native": "^1.0.2"
+  }
+}

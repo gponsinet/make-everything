@@ -18,6 +18,7 @@ install.spacevim: \
 	$(BREW_HOME)/Cellar/python@3.9 \
 	$(BREW_HOME)/Cellar/global \
 	$(HOME)/.SpaceVim \
+	$(HOME)/.SpaceVim.d/init.toml \
 	.SpaceVim.d/init.toml \
 # 	$(yarn.global.mod)/import-js \
 # 	$(yarn.global.mod)/javascript-typescript-langserver \
@@ -40,12 +41,11 @@ trash.spacevim:
 $(HOME)/.SpaceVim:
 	curl -sLf https://spacevim.org/install.sh | bash
 
-ifneq ($(CURDIR),$(HOME))
-.SpaceVim.d/init.toml: $(HOME)/.SpaceVim/init.toml
-endif
+$(HOME)/.SpaceVim.d/init.toml:
+	mkdir -p $(dir $@)
+	touch $@
 
 .SpaceVim.d/init.toml:
-	conflate -o $@ $^
-
+	conflate -o $@ $^ $(HOME)/.SpaceVim.d/init.toml
 
 endif # spacevim.mk
