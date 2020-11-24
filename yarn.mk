@@ -1,9 +1,10 @@
 ifndef yarn.mk
-yarn.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+yarn.mk := $(dotmk)/yarn.mk
 
-include $(dir $(yarn.mk))/config.mk
-include $(dir $(yarn.mk))/volta.mk
-include $(dir $(yarn.mk))/node.mk
+include $(dotmk)/config.mk
+include $(dotmk)/volta.mk
+include $(dotmk)/node.mk
 
 export YARN_VERSION ?= latest
 

@@ -1,10 +1,11 @@
-ifndef android.mk
-android.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+ifndef $(dotmk)/android.mk
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+android.mk := $(dotmk)/android.mk
 
-include $(dir $(android.mk))/config.mk
-include $(dir $(android.mk))/system.mk
-include $(dir $(android.mk))/helper.mk
-include $(dir $(android.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/system.mk
+include $(dotmk)/helper.mk
+include $(dotmk)/brew.mk
 
 android.path :=
 android.tools.href :=

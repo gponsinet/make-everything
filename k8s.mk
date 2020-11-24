@@ -1,7 +1,8 @@
 ifndef k8s.mk
-k8s.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+k8s.mk := $(dotmk)/k8s.mk
 
-include $(dir $(k8s.mk))/brew.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \

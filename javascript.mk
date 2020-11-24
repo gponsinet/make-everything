@@ -1,10 +1,11 @@
 ifndef javascript.mk
-javascript.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+javascript.mk := $(dotmk)/javascript.mk
 
-include $(dir $(javascript.mk))/config.mk
-include $(dir $(javascript.mk))/volta.mk
+include $(dotmk)/config.mk
+include $(dotmk)/volta.mk
 ifndef yarn.mk
-include $(dir $(javascript.mk))/npm.mk
+include $(dotmk)/npm.mk
 endif
 
 .PHONY: \

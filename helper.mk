@@ -1,5 +1,6 @@
 ifndef helper.mk
-helper.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+helper.mk := $(dotmk)/helper.mk
 
 find_up = \
 	while true; \

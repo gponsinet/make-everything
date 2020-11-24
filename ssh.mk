@@ -1,8 +1,9 @@
 ifndef ssh.mk
-ssh.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+ssh.mk := $(dotmk)/ssh.mk
 
-include $(dir $(ssh.mk))/config.mk
-include $(dir $(ssh.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \

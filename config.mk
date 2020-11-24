@@ -1,7 +1,8 @@
 ifndef config.mk
-config.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+config.mk := $(dotmk)/config.mk
 
-include $(dir $(config.mk))/system.mk
+include $(dotmk)/system.mk
 
 SHELL := bash
 

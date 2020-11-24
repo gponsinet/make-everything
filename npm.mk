@@ -1,9 +1,10 @@
 ifndef npm.mk
-npm.mk := $(lastword $(MAKEFILE_LIST))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+npm.mk := $(dotmk)/npm.mk
 
-include $(dir $(npm.mk))/config.mk
-include $(dir $(npm.mk))/volta.mk
-include $(dir $(npm.mk))/node.mk
+include $(dotmk)/config.mk
+include $(dotmk)/volta.mk
+include $(dotmk)/node.mk
 
 export NPM_VERSION ?= latest
 

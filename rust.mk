@@ -1,9 +1,10 @@
 ifndef rust.mk
-rust.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+rust.mk := $(dotmk)/rust.mk
 
-include $(dir $(rust.mk))/config.mk
-include $(dir $(rust.mk))/helpers.mk
-include $(dir $(rust.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/helpers.mk
+include $(dotmk)/brew.mk
 
 rust.root := $(patsubst %/,%,$(or $(dir $(shell \
 	$(call find_up_first,Cargo.toml) \

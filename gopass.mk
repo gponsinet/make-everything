@@ -1,10 +1,11 @@
 ifndef gopass.mk
-gopass.mk := $(lastword $(MAKEFILE_LIST))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+gopass.mk := $(dotmk)/gopass.mk
 
-include $(dir $(gopass.mk))/config.mk
-include $(dir $(gopass.mk))/helper.mk
-include $(dir $(gopass.mk))/brew.mk
-include $(dir $(gpg.mk))/gpg.mk
+include $(dotmk)/config.mk
+include $(dotmk)/helper.mk
+include $(dotmk)/brew.mk
+include $(dotmk)/gpg.mk
 
 .PHONY: \
 	install \

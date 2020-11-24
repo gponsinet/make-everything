@@ -1,11 +1,12 @@
 ifndef gem.mk
-gem.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+gem.mk := $(dotmk)/gem.mk
 
 gem.path := /home/linuxbrew/.linuxbrew/lib/ruby/gems
 gem.bin := $(lastword $(shell find $(gem.path) -maxdepth 2 -type d -name bin))
 
-include $(dir $(gem.mk))/config.mk
-include $(dir $(gem.mk))/ruby.mk
+include $(dotmk)/config.mk
+include $(dotmk)/ruby.mk
 
 export PATH := $(gem.bin):$(PATH)
 

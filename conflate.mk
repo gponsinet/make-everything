@@ -1,8 +1,9 @@
 ifndef conflate.mk
-conflate.mk := $(lastword $(MAKEFILE_LIST))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+conflate.mk := $(dotmk)/conflate.mk
 
-include $(dir $(conflate.mk))/config.mk
-include $(dir $(conflate.mk))/go.mk
+include $(dotmk)/config.mk
+include $(dotmk)/go.mk
 
 .PHONY: \
 	install \

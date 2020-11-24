@@ -1,9 +1,10 @@
 ifndef spacevim.mk
-spacevim.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+spacevim.mk := $(dotmk)/spacevim.mk
 
-include $(dir $(spacevim.mk))/config.mk
-include $(dir $(spacevim.mk))/brew.mk
-include $(dir $(spacevim.mk))/conflate.mk
+include $(dotmk)/config.mk
+include $(dotmk)/brew.mk
+include $(dotmk)/conflate.mk
 
 .PHONY: \
 	install \
@@ -24,24 +25,6 @@ install.spacevim: \
 # 	$(yarn.global.mod)/javascript-typescript-langserver \
 # 	$(yarn.global.mod)/typescript-language-server 
 
-$(HOME)/.SpaceVim:
-	curl -sLf https://spacevim.org/install.sh | bash
-
-ifneq ($(CURDIR),$(HOME))
-.SpaceVim.d/init.toml: $(HOME)/.SpaceVim/init.toml
-endif
-
-.SpaceVim.d/init.toml:
-	# conflate -o $@ $^
-
-.IGNORE \
-.PHONY: \
-	clean \
-	clean.spacevim
-
-clean: clean.spacevim
-clean.spacevim:
-
 .IGNORE \
 .PHONY: \
 	trash \
@@ -53,6 +36,16 @@ trash.spacevim:
 	rm -rf ~/.SpaceVim
 	rm -rf ~/.cache/SpaceVim
 	rm -rf ~/.cache/vimfiles
-trash.spacevim.gtags:
+
+$(HOME)/.SpaceVim:
+	curl -sLf https://spacevim.org/install.sh | bash
+
+ifneq ($(CURDIR),$(HOME))
+.SpaceVim.d/init.toml: $(HOME)/.SpaceVim/init.toml
+endif
+
+.SpaceVim.d/init.toml:
+	conflate -o $@ $^
+
 
 endif # spacevim.mk

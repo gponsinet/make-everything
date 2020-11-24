@@ -1,8 +1,9 @@
 ifndef go.mk
-go.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+go.mk := $(dotmk)/go.mk
 
-include $(dir $(go.mk))/config.mk
-include $(dir $(go.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/brew.mk
 
 export GOPATH := $(HOME)/.go
 export GO111MODULE=auto

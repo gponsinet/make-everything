@@ -1,9 +1,10 @@
 ifndef mariadb.mk
-mariadb.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+mariadb.mk := $(dotmk)/mariadb.mk
 
-include $(dir $(mariadb.mk))/config.mk
-include $(dir $(mariadb.mk))/helper.mk
-include $(dir $(mariadb.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/helper.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \

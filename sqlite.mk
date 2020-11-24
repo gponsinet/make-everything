@@ -1,9 +1,10 @@
 ifndef sqlite.mk
-sqlite.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+sqlite.mk := $(dotmk)/sqlite.mk
 
-include $(dir $(sqlite.mk))/config.mk
-include $(dir $(sqlite.mk))/helper.mk
-include $(dir $(sqlite.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/helper.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \

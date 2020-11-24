@@ -1,6 +1,7 @@
 ifndef eslint.mk
-eslint.mk := $(lastword $(MAKEFILE_LIST))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+eslint.mk := $(dotmk)/eslint.mk
 
-include $(dir $(eslint.mk))/config.mk
+include $(dotmk)/config.mk
 
 endif

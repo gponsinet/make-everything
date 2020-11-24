@@ -1,10 +1,11 @@
 ifndef react-native.mk
-react-native.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+react-native.mk := $(dotmk)/react-native.mk
 
-include $(dir $(react-native.mk))/config.mk
-include $(dir $(react-native.mk))/android.mk
+include $(dotmk)/config.mk
+include $(dotmk)/android.mk
 ifndef yarn.mk
-include $(dir $(react-native.mk))/npm.mk
+include $(dotmk)/npm.mk
 endif
 
 .PHONY: \

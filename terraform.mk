@@ -1,7 +1,8 @@
 ifndef terraform.mk
-terraform.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+terraform.mk := $(dotmk)/terraform.mk
 
-include $(dir $(terraform.mk))/brew.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \

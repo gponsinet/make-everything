@@ -1,8 +1,9 @@
 ifndef bazel.mk
-bazel.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+bazel.mk := $(dotmk)/bazel.mk
 
-include $(dir $(bazel.mk))/config.mk
-include $(dir $(bazel.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/brew.mk
 
 bazel := $(BREW_HOME)/Cellar/bazel
 

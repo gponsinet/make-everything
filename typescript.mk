@@ -1,8 +1,10 @@
 ifndef typescript.mk
-typescript.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+typescript.mk := $(dotmk)/typescript.mk
 
-include $(dir $(typescript.mk))/config.mk
-include $(dir $(typescript.mk))/volta.mk
+include $(dotmk)/config.mk
+include $(dotmk)/volta.mk
+include $(dotmk)/conflate.mk
 
 TYPESCRIPT_VERSION := latest
 
@@ -27,11 +29,13 @@ ifneq ($(CURDIR),$(HOME))
 	volta uninstall typescript@$(TYPESCRIPT_VERSION) typescript-language-server
 endif
 
-
 ifneq ($(CURDIR),$(HOME))
-package.json: $(dir $(typescript.mk))/typescript/package.json
+install.typescript: tsconfig.json
+tsconfig.json:
+	conflate -o $@ $^
 endif
 
-.SpaceVim.d/init.toml: $(dir $(typescript.mk))/typescript/.SpaceVim.d/init.toml
+package.json: $(dotmk)/typescript/package.json
+.SpaceVim.d/init.toml: $(dotmk)/typescript/.SpaceVim.d/init.toml
 
 endif

@@ -1,9 +1,10 @@
 ifndef gpg.mk
-gpg.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+gpg.mk := $(dotmk)/gpg.mk
 
-include $(dir $(gpg.mk))/config.mk
-include $(dir $(gpg.mk))/system.mk
-include $(dir $(gpg.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/system.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \

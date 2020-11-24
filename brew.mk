@@ -1,8 +1,9 @@
 ifndef brew.mk
-brew.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+brew.mk := $(dotmk)/brew.mk
 
-include $(dir $(brew.mk))/config.mk
-include $(dir $(brew.mk))/system.mk
+include $(dotmk)/config.mk
+include $(dotmk)/system.mk
 
 ifdef $(or $(system/linux), $(system/darwin))
 

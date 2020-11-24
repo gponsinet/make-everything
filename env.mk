@@ -1,5 +1,6 @@
 ifndef env.mk
-env.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+env.mk := $(dotmk)/env.mk
 
 .PHONY: \
 	export \

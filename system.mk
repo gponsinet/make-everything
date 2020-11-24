@@ -1,7 +1,8 @@
 ifndef system.mk
-system.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+system.mk := $(dotmk)/system.mk
 
-include $(dir $(system.mk))/config.mk
+include $(dotmk)/config.mk
 
 ifdef OS
 	ifeq ($(OS),Windows_NT)

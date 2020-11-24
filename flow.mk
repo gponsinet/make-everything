@@ -1,5 +1,6 @@
 ifndef flow.mk
-flow.mk := $(lastword $(MAKEFILE_LIST))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+flow.mk := $(dotmk)/flow.mk
 
 include $(DOTMK_HOME)/config.mk
 include $(DOTMK_HOME)/javascript.mk
@@ -23,9 +24,9 @@ trash.flow:
 
 
 ifneq ($(CURDIR),$(HOME))
-package.json: $(dir $(flow.mk))/package.json
+package.json: $(dotmk)/package.json
 endif
 
-.SpaceVim.d/init.toml: $(dir $(flow.mk))/flow/.SpaceVim.d/init.toml
+.SpaceVim.d/init.toml: $(dotmk)/flow/.SpaceVim.d/init.toml
 
 endif

@@ -1,9 +1,10 @@
 ifndef babel.mk
-babel.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+babel.mk := $(dotmk)/babel.mk
 
-include $(dir $(babel.mk))/config.mk
+include $(dotmk)/config.mk
 ifndef yarn.mk
-include $(dir $(babel.mk))/npm.mk
+include $(dotmk)/npm.mk
 endif
 
 .PHONY: \
@@ -23,9 +24,9 @@ trash.babel:
 
 
 ifneq ($(CURDIR),$(HOME))
-package.json: $(dir $(babel.mk))/babel/package.json
+package.json: $(dotmk)/babel/package.json
 endif
 
-.SpaceVim.d/init.toml: $(dir $(babel.mk))/babel/.SpaceVim.d/init.toml
+.SpaceVim.d/init.toml: $(dotmk)/babel/.SpaceVim.d/init.toml
 
 endif

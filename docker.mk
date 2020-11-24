@@ -1,9 +1,10 @@
 ifndef docker.mk
-docker.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+docker.mk := $(dotmk)/docker.mk
 
-include $(dir $(docker.mk))/config.mk
-include $(dir $(docker.mk))/system.mk
-include $(dir $(docker.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/system.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \

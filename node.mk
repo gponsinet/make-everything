@@ -1,8 +1,9 @@
 ifndef node.mk
-node.mk := $(lastword $(MAKEFILE_LIST))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+node.mk := $(dotmk)/node.mk
 
-include $(dir $(node.mk))/config.mk
-include $(dir $(node.mk))/volta.mk
+include $(dotmk)/config.mk
+include $(dotmk)/volta.mk
 
 export NODE_VERSION ?= latest
 

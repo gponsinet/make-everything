@@ -1,8 +1,9 @@
 ifndef ruby.mk
-ruby.mk := $(abspath $(lastword $(MAKEFILE_LIST)))
+dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+ruby.mk := $(dotmk)/ruby.mk
 
-include $(dir $(ruby.mk))/config.mk
-include $(dir $(ruby.mk))/brew.mk
+include $(dotmk)/config.mk
+include $(dotmk)/brew.mk
 
 .PHONY: \
 	install \
