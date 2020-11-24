@@ -2,8 +2,8 @@ ifndef docker.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 docker.mk := $(dotmk)/docker.mk
 
-include $(dotmk)/config.mk
-include $(dotmk)/system.mk
+include $(dotmk)/dotmk.mk
+
 include $(dotmk)/brew.mk
 
 .PHONY: \

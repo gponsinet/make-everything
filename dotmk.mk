@@ -1,8 +1,6 @@
-ifndef config.mk
+ifndef dotmk.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-config.mk := $(dotmk)/config.mk
-
-include $(dotmk)/system.mk
+dotmk.mk := $(dotmk)/dotmk.mk
 
 SHELL := bash
 
@@ -12,4 +10,19 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 .DEFAULT_GOAL := help
 
-endif # config.mk
+ifdef OS
+	ifeq ($(OS),Windows_NT)
+		system/windows := system/windows
+	endif
+endif
+ifndef OS
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		system/linux := system/linux
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		system/darwin := system/darwin
+	endif
+endif
+
+endif # dotmk.mk

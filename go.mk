@@ -2,7 +2,7 @@ ifndef go.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 go.mk := $(dotmk)/go.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/brew.mk
 
 export GOPATH := $(HOME)/.go

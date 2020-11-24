@@ -2,8 +2,8 @@ ifndef $(dotmk)/android.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 android.mk := $(dotmk)/android.mk
 
-include $(dotmk)/config.mk
-include $(dotmk)/system.mk
+include $(dotmk)/dotmk.mk
+
 include $(dotmk)/helper.mk
 include $(dotmk)/brew.mk
 

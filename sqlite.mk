@@ -2,7 +2,7 @@ ifndef sqlite.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 sqlite.mk := $(dotmk)/sqlite.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/helper.mk
 include $(dotmk)/brew.mk
 

@@ -5,7 +5,7 @@ gem.mk := $(dotmk)/gem.mk
 gem.path := /home/linuxbrew/.linuxbrew/lib/ruby/gems
 gem.bin := $(lastword $(shell find $(gem.path) -maxdepth 2 -type d -name bin))
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/ruby.mk
 
 export PATH := $(gem.bin):$(PATH)

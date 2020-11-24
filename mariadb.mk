@@ -2,7 +2,7 @@ ifndef mariadb.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 mariadb.mk := $(dotmk)/mariadb.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/helper.mk
 include $(dotmk)/brew.mk
 

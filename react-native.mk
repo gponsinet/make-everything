@@ -2,7 +2,7 @@ ifndef react-native.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 react-native.mk := $(dotmk)/react-native.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/android.mk
 ifndef yarn.mk
 include $(dotmk)/npm.mk

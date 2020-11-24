@@ -2,7 +2,7 @@ ifndef rust.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 rust.mk := $(dotmk)/rust.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/helpers.mk
 include $(dotmk)/brew.mk
 

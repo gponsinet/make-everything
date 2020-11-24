@@ -2,7 +2,7 @@ ifndef volta.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 volta.mk := $(dotmk)/volta.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 
 export VOLTA_HOME ?= $(HOME)/.volta
 export PATH := $(VOLTA_HOME)/bin:$(PATH)

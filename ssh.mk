@@ -2,7 +2,7 @@ ifndef ssh.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 ssh.mk := $(dotmk)/ssh.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/brew.mk
 
 .PHONY: \

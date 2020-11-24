@@ -2,7 +2,7 @@ ifndef javascript.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 javascript.mk := $(dotmk)/javascript.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
 ifndef yarn.mk
 include $(dotmk)/npm.mk

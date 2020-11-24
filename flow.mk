@@ -2,7 +2,7 @@ ifndef flow.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 flow.mk := $(dotmk)/flow.mk
 
-include $(DOTMK_HOME)/config.mk
+include $(DOTMK_HOME)/dotmk.mk
 include $(DOTMK_HOME)/javascript.mk
 
 .PHONY: \

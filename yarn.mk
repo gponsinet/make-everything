@@ -2,7 +2,7 @@ ifndef yarn.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 yarn.mk := $(dotmk)/yarn.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
 include $(dotmk)/node.mk
 

@@ -2,7 +2,7 @@ ifndef spacevim.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 spacevim.mk := $(dotmk)/spacevim.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/brew.mk
 include $(dotmk)/conflate.mk
 

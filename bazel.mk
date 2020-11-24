@@ -2,7 +2,7 @@ ifndef bazel.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 bazel.mk := $(dotmk)/bazel.mk
 
-include $(dotmk)/config.mk
+include $(dotmk)/dotmk.mk
 include $(dotmk)/brew.mk
 
 bazel := $(BREW_HOME)/Cellar/bazel
