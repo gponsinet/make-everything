@@ -27,6 +27,6 @@ ifneq ($(CURDIR),$(HOME))
 package.json: $(dotmk)/package.json
 endif
 
-.SpaceVim.d/init.toml: $(dotmk)/flow/.SpaceVim.d/init.toml
+.SpaceVim.d/init.toml: $(dotmk)/flow/.SpaceVim.d/custom.toml
 
 endif

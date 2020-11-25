@@ -19,6 +19,8 @@ install.javascript: install.npm
 else
 install.javascript: install.yarn
 endif
+install.javascript:
+	volta install javascript-typescript-langserver
 
 .IGNORE \
 .PHONY: \
@@ -32,6 +34,6 @@ else
 trash.yarn: trash.javascript
 endif
 trash.javascript:
-	volta uninstall eslint-cli javascript-typescript-langserver
+	volta uninstall javascript-typescript-langserver
 
 endif

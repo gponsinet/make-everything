@@ -16,7 +16,8 @@ export PATH := $(GOPATH)/bin:$(PATH)
 install: install.go
 install.go: $(BREW_HOME)/Cellar/go
 
-$(GOPATH)/src/%: | install.go
+.PHONY: $(GOPATH)/src/%
+$(GOPATH)/src/%:
 	go get -u $*
 
 .IGNORE \
@@ -27,6 +28,14 @@ $(GOPATH)/src/%: | install.go
 trash: trash.go
 trash.brew: trash.go
 trash.go:
-	rm -rf $(GOPATH)
+	rm -rf \
+		$(GOPATH)/src/github.com/jstemmer/gotags \
+		$(GOPATH)/src/github.com/sourcegraph/go-langserver \
+		$(GOPATH)
+
+.SpaceVim.d/init.toml: $(dotmk)/go/.SpaceVim.d/custom.toml
+.SpaceVim.d/init.toml: | \
+	$(GOPATH)/src/github.com/jstemmer/gotags \
+	$(GOPATH)/src/github.com/sourcegraph/go-langserver
 
 endif # go.mk

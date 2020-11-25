@@ -4,6 +4,7 @@ node.mk := $(dotmk)/node.mk
 
 include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
+include $(dotmk)/conflate.mk
 
 export NODE_VERSION ?= latest
 
@@ -14,6 +15,7 @@ node := $(VOLTA_HOME)/bin/node
 	install.node
 
 install: install.node
+install.node: install.conflate
 install.node: install.volta
 	volta install node@$(NODE_VERSION)
 ifneq ($(CURDIR),$(HOME))
@@ -22,6 +24,9 @@ endif
 
 ifneq ($(CURDIR),$(HOME))
 install.node: package.json
+package.json:
+	npm init
+	conflate $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
 endif
 
 .IGNORE \

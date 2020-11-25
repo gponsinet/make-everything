@@ -1,7 +1,4 @@
 [[layers]]
-  name = "format"
-
-[[layers]]
   name = "lang#dockerfile"
 
 [[layers]]
