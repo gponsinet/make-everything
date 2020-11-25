@@ -4,9 +4,8 @@ javascript.mk := $(dotmk)/javascript.mk
 
 include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
-ifndef yarn.mk
 include $(dotmk)/npm.mk
-endif
+include $(dotmk)/yarn.mk
 
 .PHONY: \
 	install \
@@ -14,11 +13,8 @@ endif
 
 install: install.javascript
 install.javascript: install.volta
-ifndef yarn.mk
 install.javascript: install.npm
-else
 install.javascript: install.yarn
-endif
 install.javascript:
 	volta install javascript-typescript-langserver
 
@@ -28,11 +24,8 @@ install.javascript:
 	trash.javascript
 
 trash: trash.javascript
-ifndef yarn.mk
 trash.npm: trash.javascript
-else
 trash.yarn: trash.javascript
-endif
 trash.javascript:
 	volta uninstall javascript-typescript-langserver
 

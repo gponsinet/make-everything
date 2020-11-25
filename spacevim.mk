@@ -6,6 +6,7 @@ include $(dotmk)/dotmk.mk
 include $(dotmk)/brew.mk
 include $(dotmk)/node.mk
 include $(dotmk)/conflate.mk
+include $(dotmk)/yarn.mk
 
 .PHONY: \
 	install \
@@ -14,6 +15,7 @@ include $(dotmk)/conflate.mk
 install: install.spacevim
 install.spacevim: \
 	install.conflate \
+	install.yarn \
 	$(BREW_HOME)/Cellar/neovim \
 	$(BREW_HOME)/Cellar/msgpack \
 	$(BREW_HOME)/Cellar/python@3.9 \

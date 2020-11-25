@@ -25,6 +25,9 @@
   # only color will be changed when switch modes.
   enable_statusline_mode = false
 
+  # set file tree to left
+  filetree_direction = "left"
+
 # Enable autocomplete layer
 [[layers]]
   name = "autocomplete"
@@ -45,6 +48,11 @@
 [[layers]]
   name = "format"
   format_on_save = true
+
+# Enable search index in statusline
+[[layers]]
+    name = "incsearch"
+
 
 [[layers]]
   name = "ctrlp"
