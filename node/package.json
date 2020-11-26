@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": ">=$NODE_VERSION"
+  },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.0"
   }

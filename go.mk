@@ -33,7 +33,7 @@ trash.go:
 		$(GOPATH)/src/github.com/sourcegraph/go-langserver \
 		$(GOPATH)
 
-.SpaceVim.d/init.toml: $(dotmk)/go/.SpaceVim.d/custom.toml
+.SpaceVim.d/init.toml: $(dotmk)/go/.SpaceVim.d/init.toml
 .SpaceVim.d/init.toml: | \
 	$(GOPATH)/src/github.com/jstemmer/gotags \
 	$(GOPATH)/src/github.com/sourcegraph/go-langserver

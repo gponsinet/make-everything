@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@babel/cli": "latest",
-    "@babel/core": "latest"
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9"
   }
 }

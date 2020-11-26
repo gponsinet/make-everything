@@ -4,9 +4,7 @@ react-native.mk := $(dotmk)/react-native.mk
 
 include $(dotmk)/dotmk.mk
 include $(dotmk)/android.mk
-ifndef yarn.mk
-include $(dotmk)/npm.mk
-endif
+include $(dotmk)/javascript.mk
 
 .PHONY: \
 	install \

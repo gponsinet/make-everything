@@ -11,6 +11,12 @@ include $(DOTMK_HOME)/javascript.mk
 
 install: install.flow
 install.flow: install.javascript
+ifeq ($(CURDIR),$(HOME))
+install.flow:
+	volta install flow-bin
+else	
+install.flow: package.json
+endif
 
 .IGNORE \
 .PHONY: \
@@ -22,11 +28,7 @@ trash.javascript: trash.flow
 trash.flow:
 	volta uninstall flow-bin
 
-
-ifneq ($(CURDIR),$(HOME))
 package.json: $(dotmk)/package.json
-endif
-
-.SpaceVim.d/init.toml: $(dotmk)/flow/.SpaceVim.d/custom.toml
+.SpaceVim.d/init.toml: $(dotmk)/flow/.SpaceVim.d/init.toml
 
 endif

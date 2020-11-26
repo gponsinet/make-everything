@@ -4,8 +4,7 @@ javascript.mk := $(dotmk)/javascript.mk
 
 include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
-include $(dotmk)/npm.mk
-include $(dotmk)/yarn.mk
+include $(dotmk)/eslint.mk
 
 .PHONY: \
 	install \
@@ -13,10 +12,13 @@ include $(dotmk)/yarn.mk
 
 install: install.javascript
 install.javascript: install.volta
-install.javascript: install.npm
-install.javascript: install.yarn
+install.javascript: install.eslint
+ifeq ($(CURDIR),$(HOME))
 install.javascript:
 	volta install javascript-typescript-langserver
+else
+install.javascript: package.json
+endif
 
 .IGNORE \
 .PHONY: \
@@ -24,9 +26,12 @@ install.javascript:
 	trash.javascript
 
 trash: trash.javascript
-trash.npm: trash.javascript
-trash.yarn: trash.javascript
+trash.eslint: trash.javascript
+ifeq ($(CURDIR),$(HOME))
 trash.javascript:
 	volta uninstall javascript-typescript-langserver
+endif
+
+.SpaceVim.d/init.toml: $(dotmk)/javascript/.SpaceVim.d/init.toml
 
 endif

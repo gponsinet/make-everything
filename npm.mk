@@ -17,6 +17,10 @@ npm := $(VOLTA_HOME)/bin/npm
 install: install.npm
 install.npm: install.volta
 install.npm: install.node
+ifneq ($(CURDIR),$(HOME))
+install.npm: node_modules
+endif
+install.node:
 	volta install npm@$(NPM_VERSION)
 ifneq ($(CURDIR),$(HOME))
 	volta pin npm@$(NPM_VERSION)
@@ -47,5 +51,16 @@ else
 	volta unpin npm
 endif
 	rm -f package-lock.json
+
+package.json:
+	npm init
+	conflate -expand -data package.json $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
+	npm install
+
+node_modules: package.json
+	npm install
+	touch $@
+
+package.json: $(dotmk)/npm/package.json
 
 endif

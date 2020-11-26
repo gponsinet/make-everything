@@ -6,7 +6,12 @@ include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
 include $(dotmk)/conflate.mk
 
-TYPESCRIPT_VERSION := latest
+export TYPESCRIPT_VERSION ?= latest
+ifeq ($(CURDIR),$(HOME))
+ export TYPESCRIPT_SERVER_PATH ?= $(VOLTA_HOME)/bin/tsserver
+else
+ export TYPESCRIPT_SERVER_PATH ?= node_modules/.bin/tsserver
+endif
 
 .PHONY: \
 	install \
@@ -14,7 +19,11 @@ TYPESCRIPT_VERSION := latest
 
 install: install.typescript
 install.typescript: install.volta
+ifeq ($(CURDIR),$(HOME))
 	volta install typescript@$(TYPESCRIPT_VERSION) typescript-language-server
+else
+install.typescript: package.json tsconfig.json
+endif
 
 .IGNORE \
 .PHONY: \
@@ -24,18 +33,19 @@ install.typescript: install.volta
 # trash: trash.typescript
 # trash.volta: trash.typescript
 trash.typescript:
-	volta uninstall typescript typescript-language-server
-ifneq ($(CURDIR),$(HOME))
+ifeq ($(CURDIR),$(HOME))
 	volta uninstall typescript@$(TYPESCRIPT_VERSION) typescript-language-server
+else
+	rm tsconfig.json
 endif
 
 ifneq ($(CURDIR),$(HOME))
 install.typescript: tsconfig.json
 tsconfig.json:
-	conflate -o $@ $^
+	conflate -expand -data tsconfig.json $(foreach %,-data %,$^) | sponge $@
 endif
 
 package.json: $(dotmk)/typescript/package.json
-.SpaceVim.d/init.toml: $(dotmk)/typescript/.SpaceVim.d/custom.toml
+.SpaceVim.d/init.toml: $(dotmk)/typescript/.SpaceVim.d/init.toml
 
 endif

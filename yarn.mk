@@ -16,6 +16,11 @@ yarn := $(VOLTA_HOME)/bin/yarn
 
 install: install.yarn
 install.yarn: install.volta
+install.yarn: install.node
+ifneq ($(CURDIR),$(HOME))
+install.npm: node_modules
+endif
+install.yarn:
 	volta install yarn@$(YARN_VERSION)
 ifneq ($(CURDIR),$(HOME))
 	volta pin yarn@$(YARN_VERSION)
@@ -38,7 +43,7 @@ clean.yarn:
 # trash: trash.yarn
 # trash.volta: trash.yarn
 trash.node: trash.yarn
-trash.npm:
+trash.yarn:
 ifeq ($(CURDIR),$(HOME))
 	volta uninstall yarn
 else
@@ -46,5 +51,16 @@ else
 	volta unpin yarn
 endif
 	rm yarn.lock
+
+package.json:
+	npm init
+	conflate -expand -data package.json $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
+	yarn
+
+node_modules: package.json
+	yarn
+	touch $@
+
+package.json: $(dotmk)/yarn/package.json
 
 endif # yarn.mk

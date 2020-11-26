@@ -29,6 +29,6 @@ clean.docker:
 trash: trash.docker
 trash.docker:
 
-.SpaceVim.d/init.toml: $(dotmk)/docker/.SpaceVim.d/custom.toml
+.SpaceVim.d/init.toml: $(dotmk)/docker/.SpaceVim.d/init.toml
 
 endif # docker.mk

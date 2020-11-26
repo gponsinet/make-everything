@@ -4,17 +4,18 @@ brew.mk := $(dotmk)/brew.mk
 
 include $(dotmk)/dotmk.mk
 
-
 ifdef $(or $(system/linux), $(system/darwin))
 
 ifdef system/linux
-BREW_HOME := /home/linuxbrew/.linuxbrew
-export PATH := $(BREW_HOME)/bin:$(PATH)
+ export BREW_HOME ?= /home/linuxbrew/.linuxbrew
 else ifdef system/darwin
-BREW_HOME := /usr/local
+ export BREW_HOME ?= /usr/local
 endif
-brew.cellar := $(BREW_HOME)/Cellar
-brew.tap := $(BREW_HOME)/Homebrew/Library/Taps
+
+export PATH := $(BREW_HOME)/bin:$(PATH)
+
+BREW_CELLAR := $(BREW_HOME)/Cellar
+BREW_TAP := $(BREW_HOME)/Homebrew/Library/Taps
 
 .PHONY: \
 	install \
@@ -44,13 +45,13 @@ trash.brew: clean.brew
 $(BREW_HOME):
 	[ -d "$@" ] || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-$(brew.cellar)/%: options ?=
-$(brew.cellar)/%: | $(BREW_HOME)
+$(BREW_CELLAR)/%: options ?=
+$(BREW_CELLAR)/%: | $(BREW_HOME)
 	brew install --force $* $(options)
 	brew link --overwrite $*
 
-$(brew.tap)/%: | $(BREW_HOME)
-	brew tap $(subst homebrew-,,$*)
+$(BREW_TAP)/%: | $(BREW_HOME)
+	BREW_TAP $(subst homebrew-,,$*)
 
 endif # system.mk
 endif # brew.mk

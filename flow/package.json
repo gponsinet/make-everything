@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@babel/preset-flow": "latest",
-    "flow-bin": "latest"
+    "@babel/preset-flow": "^7.12.1",
+    "flow-bin": "^0.138.0"
   }
 }

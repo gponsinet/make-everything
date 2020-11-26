@@ -20,10 +20,7 @@ install.babel:
 trash: trash.babel
 trash.babel:
 
-ifneq ($(CURDIR),$(HOME))
+.gitignore: $(dotmk)/babel/.gitignore
 package.json: $(dotmk)/babel/package.json
-endif
-
-.SpaceVim.d/init.toml: $(dotmk)/babel/.SpaceVim.d/custom.toml
 
 endif

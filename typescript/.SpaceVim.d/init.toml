@@ -1,6 +1,6 @@
 [[layers]]
   name = "lang#typescript"
-  typescript_server_path = "$VOLTA_HOME/bin/tsserver"
+  typescript_server_path = "$TYPESCRIPT_SERVER_PATH"
 
 [[layers]]
   name = "lsp"

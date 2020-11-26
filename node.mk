@@ -7,8 +7,9 @@ include $(dotmk)/volta.mk
 include $(dotmk)/conflate.mk
 
 export NODE_VERSION ?= latest
-
-node := $(VOLTA_HOME)/bin/node
+ifeq ($(CURDIR),$(HOME))
+ export PATH := $(CURDIR)/node_modules/.bin:$(PATH)
+endif
 
 .PHONY: \
 	install \
@@ -20,13 +21,6 @@ install.node: install.volta
 	volta install node@$(NODE_VERSION)
 ifneq ($(CURDIR),$(HOME))
 	volta pin node@$(NODE_VERSION)
-endif
-
-ifneq ($(CURDIR),$(HOME))
-install.node: package.json
-package.json:
-	npm init
-	conflate $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
 endif
 
 .IGNORE \
@@ -51,5 +45,7 @@ else
 	volta uninstall node@$(NODE_VERSION)
 	volta unpin node
 endif
+
+package.json: $(dotmk)/node/package.json
 
 endif

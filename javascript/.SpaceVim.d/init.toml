@@ -1,0 +1,7 @@
+[[layers]]
+  name = "lang#javascript"
+  auto_fix = true
+
+[[layers]]
+  name = "lsp"
+  filetypes = ["javascript"]
