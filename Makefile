@@ -1,11 +1,13 @@
 include dotmk.mk
 
 %.mk:
-	for file in $$(find .template -type f | sed s,\^\.template/,,); do \
-		[ -d $* ] || mkdir -p $$(dirname $$file); \
+	[ -d $* ] || mkdir $*
+	for file in $(shell find .template -type f | sed s,\^\.template/,,); do \
+		[ -d $*/$$(dirname $$file) ] || mkdir $*/$$(dirname $$file); \
 		if [ -f $*/$$file ]; then \
-			mv $*/$$file $*/$$file.bkp; \
-			git merge-file $*/$$file .template/$$file $*/$$file; \
+			[ ! -f $*/$$file.bkp ] || mv $*/$$file $*/$$file.bkp; \
+			git merge-file $*/$$file .template/$$file $*/$$file.bkp; \
+			rm -f $*/$$file.bkp; \
 		else \
 			cp .template/$$file $*/$$file; \
 		fi; done
