@@ -6,7 +6,7 @@ include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
 include $(dotmk)/node.mk
 
-export NPM_VERSION ?= latest
+export NPM_VERSION ?= 7 
 
 npm := $(VOLTA_HOME)/bin/npm
 
@@ -20,10 +20,10 @@ install.npm: install.node
 ifneq ($(CURDIR),$(HOME))
 install.npm: node_modules
 endif
-install.node:
+install.npm:
 	volta install npm@$(NPM_VERSION)
 ifneq ($(CURDIR),$(HOME))
-	volta pin npm@$(NPM_VERSION)
+	[ -f package.json ] || volta pin npm@$(NPM_VERSION)
 endif
 
 .IGNORE \
@@ -52,8 +52,11 @@ else
 endif
 	rm -f package-lock.json
 
+ifneq ($(CURDIR),$(HOME))
 package.json:
 	npm init
+	volta pin node@$(NODE_VERSION)
+	volta pin npm@$(NPM_VERSION)
 	conflate -expand -data package.json $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
 	npm install
 
@@ -62,5 +65,6 @@ node_modules: package.json
 	touch $@
 
 package.json: $(dotmk)/npm/package.json
+endif
 
 endif

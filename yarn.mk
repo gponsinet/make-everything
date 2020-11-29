@@ -18,12 +18,12 @@ install: install.yarn
 install.yarn: install.volta
 install.yarn: install.node
 ifneq ($(CURDIR),$(HOME))
-install.npm: node_modules
+install.yarn: node_modules
 endif
 install.yarn:
 	volta install yarn@$(YARN_VERSION)
 ifneq ($(CURDIR),$(HOME))
-	volta pin yarn@$(YARN_VERSION)
+	[ -f package.json ] || volta pin yarn@$(YARN_VERSION)
 endif
 
 .IGNORE \
@@ -52,8 +52,11 @@ else
 endif
 	rm yarn.lock
 
+ifneq ($(CURDIR),$(HOME))
 package.json:
 	npm init
+	volta pin node@$(NODE_VERSION)
+	volta pin yarn@$(YARN_VERSION)
 	conflate -expand -data package.json $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
 	yarn
 
@@ -62,5 +65,6 @@ node_modules: package.json
 	touch $@
 
 package.json: $(dotmk)/yarn/package.json
+endif
 
 endif # yarn.mk

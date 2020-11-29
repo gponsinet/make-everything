@@ -17,10 +17,13 @@ endif
 
 install: install.node
 install.node: install.conflate
+ifneq ($(CURDIR), $(HOME))
+install.node: package.json
+endif
 install.node: install.volta
 	volta install node@$(NODE_VERSION)
 ifneq ($(CURDIR),$(HOME))
-	volta pin node@$(NODE_VERSION)
+	[ ! -f package.json ] || volta pin node@$(NODE_VERSION)
 endif
 
 .IGNORE \
@@ -43,9 +46,11 @@ ifeq ($(CURDIR),$(HOME))
 	volta uninstall node
 else
 	volta uninstall node@$(NODE_VERSION)
-	volta unpin node
+	[ ! -f package.json ] || volta unpin node
 endif
 
-package.json: $(dotmk)/node/package.json
+package.json \
+.gitignore \
+: %: $(dotmk)/%
 
 endif

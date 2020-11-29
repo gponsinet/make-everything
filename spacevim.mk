@@ -43,19 +43,22 @@ endif
 $(HOME)/.SpaceVim:
 	curl -sLf https://spacevim.org/install.sh | bash
 
+ifneq ($(CURDIR),$(HOME))
 $(HOME)/.SpaceVim.d/init.toml:
 	[ -e $@ ] || (mkdir $(dir $@) && touch $@)
+endif
 
 $(CURDIR)/.SpaceVim.d/init.toml:
 	[ -e $@ ] || (mkdir $(dir $@) && touch $@)
 
-.SpaceVim.d/init.toml: 
+.SpaceVim.d/init.toml:
 	$(eval %/.SpaceVim.d/.init.yml := \
 		$(foreach pre,$^,$(patsubst $(dir $(pre))%.toml,$(dir $(pre)).%.yml,$(pre))))
 	make $(%/.SpaceVim.d/.init.yml)
 	conflate \
 		$(patsubst %,-data %,$(%/.SpaceVim.d/.init.yml)) \
 		-format TOML \
+		| sed 's,merge = 0.0,merge = 0,' \
 		| sponge $@
 
 %/.SpaceVim.d/.init.yml: %/.SpaceVim.d/init.toml

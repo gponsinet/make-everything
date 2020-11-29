@@ -6,6 +6,8 @@ include $(dotmk)/dotmk.mk
 include $(dotmk)/android.mk
 include $(dotmk)/javascript.mk
 
+export REACT_NATIVE_VERSION ?= latest
+
 .PHONY: \
 	install \
 	install.react-native

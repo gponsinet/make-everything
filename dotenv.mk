@@ -15,12 +15,12 @@ $(shell \
 	| sed 's,^,export ,' \
 	| sed 's,=, ?= ,' \
 	| sed 's,SHELL ?=,SHELL :=,' \
-	> .env.mk \
+	> .env.mk 2>/dev/null \
 )
 
 .gitignore: $(dotmk)/dotenv/.gitignore
 
 # include at end because it override MAKEFILE_LIST
-include .env.mk
+-include .env.mk
 
 endif

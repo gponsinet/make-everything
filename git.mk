@@ -18,6 +18,7 @@ trash.git:
 	git init
 
 .gitignore: | $(BREW_HOME)/Cellar/moreutils
-	cat $@ $^ | uniq | sponge $@
+	touch $@
+	cat $@ $^ | sort | uniq | sponge $@
 
 endif
