@@ -2,19 +2,49 @@ ifndef gem.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 gem.mk := $(dotmk)/gem.mk
 
-gem.path := /home/linuxbrew/.linuxbrew/lib/ruby/gems
-gem.bin := $(lastword $(shell find $(gem.path) -maxdepth 2 -type d -name bin))
-
 include $(dotmk)/dotmk.mk
 include $(dotmk)/ruby.mk
-
-export PATH := $(gem.bin):$(PATH)
 
 .PHONY: \
 	install \
 	install.gem
 
-install: install.ruby
+install: install.gem
 install.gem: install.ruby
+
+.IGNORE \
+.PHONY: \
+	trash \
+	trash.gem
+
+trash: trash.ruby
+trash.ruby: trash.gem
+
+.PHONY: gem
+gem: install.ruby
+
+.IGNORE \
+.PHONY: ~gem
+trash.ruby: ~gem
+~gem:
+	@true
+
+.PHONY: gem.%
+gem.%:
+	gem list -i "^$*$$" | grep true 1>/dev/null || gem install --force $*
+
+.PHONY: gem(%)
+gem(%):
+	make $(foreach _,$*,gem.$(_))
+
+.IGNORE \
+.PHONY: gem.%
+~gem.%:
+	gem list -i "^$*$$" | grep false || gem uninstall $*
+
+.IGNORE \
+.PHONY: ~gem(%)
+~gem(%):
+	make $(foreach _,$*,~gem.$(_))
 
 endif # gem.mk

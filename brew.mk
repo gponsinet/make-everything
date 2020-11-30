@@ -16,21 +16,11 @@ export PATH := $(BREW_HOME)/bin:$(PATH)
 
 BREW_CELLAR := $(BREW_HOME)/Cellar
 BREW_TAP := $(BREW_HOME)/Homebrew/Library/Taps
+BREW_BIN := $(BREW_HOME)/bin
 
-.PHONY: \
-	install \
-	install.brew
-
+.PHONY: install.brew
 install: install.brew
-install.brew: $(BREW_HOME)
-
-.IGNORE \
-.PHONY: \
-	clean \
-	clean.brew
-
-clean: clean.brew
-clean.brew:
+install.brew: brew
 
 .IGNORE \
 .PHONY: \
@@ -38,9 +28,36 @@ clean.brew:
 	trash.brew
 
 trash:
-trash.brew: clean.brew
+trash.brew: ~brew
+
+
+.PHONY: brew brew.% brew(%)
+.IGNORE \
+.PHONY: ~brew ~brew.% ~brew(%)
+
+.PHONY: brew
+brew: $(BREW_HOME)
+	@true
+
+.PHONY: brew(%)
+brew(%):
+	make $(foreach _,$*,brew.$_)
+
+.PHONY: brew.%
+brew.%:
+	(echo $* | grep '/' && make $(BREW_TAP)/$*) || make $(BREW_CELLAR)/$*
+
+.IGNORE .PHONY: ~brew
+~brew:
 	sudo ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 	sudo rm -rf $(BREW_HOME)
+
+.IGNORE .PHONY: ~brew(%)
+~brew(%):
+	make $(foreach _,$*,brew.$_)
+
+.IGNORE .PHONY: ~brew.%
+	(echo $* | grep '/' && brew untap $*) || brew uninstall $*
 
 $(BREW_HOME):
 	[ -d "$@" ] || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -51,7 +68,10 @@ $(BREW_CELLAR)/%: | $(BREW_HOME)
 	brew link --overwrite $*
 
 $(BREW_TAP)/%: | $(BREW_HOME)
-	BREW_TAP $(subst homebrew-,,$*)
+	brew tap $(subst homebrew-,,$*)
+
+$(BREW_BIN)/%: $(BREW_CELLAR)/%
+	@true
 
 endif # system.mk
 endif # brew.mk

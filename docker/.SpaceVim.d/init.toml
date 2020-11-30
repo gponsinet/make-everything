@@ -1,10 +1,10 @@
+# docker.mk
+
 [[layers]]
   name = "lang#dockerfile"
 
-[[layers]]
-  name = "lsp"
-  filetypes = ["dockerfile"]
-  [layers.override_cmd]
-    dockerfile = ["$DOCKER_LANGSERVER_PATH", "--stdio"]
-
-
+# [[layers]]
+#   name = "lsp"
+#   filetypes = ["dockerfile"]
+#   [layers.override_cmd]
+#     dockerfile = ["$DOCKER_LANGSERVER_PATH", "--stdio"]

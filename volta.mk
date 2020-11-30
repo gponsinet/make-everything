@@ -3,29 +3,46 @@ dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 volta.mk := $(dotmk)/volta.mk
 
 include $(dotmk)/dotmk.mk
+include $(dotmk)/curl.mk
+include $(dotmk)/node.mk
 
 export VOLTA_HOME ?= $(HOME)/.volta
 export PATH := $(VOLTA_HOME)/bin:$(PATH)
 
-volta := $(VOLTA_HOME)/bin/volta
+install install.volta: volta
+trash trash.volta: ~volta
 
-.PHONY: \
-	install \
-	install.volta
-
-install: install.volta
-install.volta: $(volta)
-
-$(volta):
-	curl https://get.volta.sh | bash
+.PHONY: volta
+volta: curl $(VOLTA_HOME)/bin/volta install.node
 
 .IGNORE \
-.PHONY: 
-trash: trash.volta
-trash.volta:
+.PHONY: ~volta
+~volta:
 	rm -rf $(VOLTA_HOME)
 
+$(VOLTA_HOME)/bin/volta:
+	curl https://get.volta.sh | bash
+
+.PHONY: volta.%
+volta.%:
+	volta list --format plain $* | grep '^package $*' || volta install neovim
+
+.PHONY: volta(%)
+volta(%):
+	make $(foreach _,$*,volta.$_)
+
+.IGNORE \
+.PHONY: ~volta.%
+~volta.%:
+	volta uninstall neovim || true
+
+.IGNORE \
+.PHONY: ~volta(%)
+~volta(%):
+	make $(foreach _,$*,~volta.$_)
+
+# deprecated
 $(VOLTA_HOME)/bin/%:
-	volta install $%
+	volta install $*
 
 endif
