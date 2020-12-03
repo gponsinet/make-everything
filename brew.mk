@@ -30,7 +30,6 @@ install.brew: brew
 trash:
 trash.brew: ~brew
 
-
 .PHONY: brew brew.% brew(%)
 .IGNORE \
 .PHONY: ~brew ~brew.% ~brew(%)

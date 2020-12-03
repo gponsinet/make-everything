@@ -6,7 +6,7 @@ include $(dotmk)/dotmk.mk
 include $(dotmk)/volta.mk
 include $(dotmk)/node.mk
 
-export NPM_VERSION ?= 7 
+export NPM_VERSION ?= 7
 
 npm := $(VOLTA_HOME)/bin/npm
 
@@ -58,7 +58,6 @@ package.json:
 	volta pin node@$(NODE_VERSION)
 	volta pin npm@$(NPM_VERSION)
 	conflate -expand -data package.json $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
-	npm install
 
 node_modules: package.json
 	npm install

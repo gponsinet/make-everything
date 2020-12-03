@@ -14,7 +14,7 @@ install.flow: install.javascript
 ifeq ($(CURDIR),$(HOME))
 install.flow:
 	volta install flow-bin
-else	
+else
 install.flow: package.json
 endif
 
@@ -28,7 +28,7 @@ trash.javascript: trash.flow
 trash.flow:
 	volta uninstall flow-bin
 
-package.json: $(dotmk)/package.json
+package.json: $(dotmk)/flow/package.json
 .SpaceVim.d/init.toml: $(dotmk)/flow/.SpaceVim.d/init.toml
 
 endif

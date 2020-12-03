@@ -17,9 +17,6 @@ endif
 
 install: install.node
 install.node: install.conflate
-ifneq ($(CURDIR), $(HOME))
-install.node: package.json
-endif
 install.node: install.volta
 	volta install node@$(NODE_VERSION)
 ifneq ($(CURDIR),$(HOME))
@@ -49,7 +46,6 @@ else
 	[ ! -f package.json ] || volta unpin node
 endif
 
-package.json \
 .gitignore \
 : %: $(dotmk)/%
 

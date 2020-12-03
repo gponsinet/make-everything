@@ -28,4 +28,11 @@ function! myspacevim#after() abort
   set timeoutlen=50
 
   set wrap
+
+	let g:coc_config_home=".SpaceVim.d"
+
+	if executable('volta')
+		let g:node_host_prog = trim(system("volta which neovim-node-host"))
+	endif
 endfunction
+

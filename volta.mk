@@ -4,7 +4,6 @@ volta.mk := $(dotmk)/volta.mk
 
 include $(dotmk)/dotmk.mk
 include $(dotmk)/curl.mk
-include $(dotmk)/node.mk
 
 export VOLTA_HOME ?= $(HOME)/.volta
 export PATH := $(VOLTA_HOME)/bin:$(PATH)
@@ -13,7 +12,7 @@ install install.volta: volta
 trash trash.volta: ~volta
 
 .PHONY: volta
-volta: curl $(VOLTA_HOME)/bin/volta install.node
+volta: curl $(VOLTA_HOME)/bin/volta
 
 .IGNORE \
 .PHONY: ~volta
@@ -25,7 +24,7 @@ $(VOLTA_HOME)/bin/volta:
 
 .PHONY: volta.%
 volta.%:
-	volta list --format plain $* | grep '^package $*' || volta install neovim
+	volta list --format plain $* | grep '^package $*' || volta install $*
 
 .PHONY: volta(%)
 volta(%):

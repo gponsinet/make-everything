@@ -57,8 +57,7 @@ package.json:
 	npm init
 	volta pin node@$(NODE_VERSION)
 	volta pin yarn@$(YARN_VERSION)
-	conflate -expand -data package.json $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
-	yarn
+	# conflate -expand -data package.json $(foreach pre,$^,-data $(pre)) -format JSON | sponge $@
 
 node_modules: package.json
 	yarn

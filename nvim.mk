@@ -6,7 +6,9 @@ include $(dotmk)/dotmk.mk
 include $(dotmk)/brew.mk
 include $(dotmk)/gem.mk
 include $(dotmk)/volta.mk
+include $(dotmk)/node.mk
 include $(dotmk)/pip3.mk
+include $(dotmk)/conflate.mk
 
 install: nvim
 trash: ~nvim
@@ -16,10 +18,12 @@ nvim: \
 	brew \
 	gem \
 	pip3 \
+	volta \
+	install.node \
 	brew(neovim) \
 	gem(neovim) \
 	volta(neovim) \
-	pip3(pynvim neovim)
+	pip3(pynvim neovim) \
 
 .IGNORE \
 .PHONY: ~nvim

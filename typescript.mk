@@ -18,10 +18,8 @@ endif
 	install.volta
 
 install: install.typescript
-install.typescript: install.volta
-ifeq ($(CURDIR),$(HOME))
-	volta install typescript@$(TYPESCRIPT_VERSION) typescript-language-server
-else
+install.typescript: volta(typescript typescript-language-server typescript-deno-plugin)
+ifneq ($(CURDIR),$(HOME))
 install.typescript: package.json tsconfig.json
 endif
 
@@ -47,5 +45,6 @@ endif
 
 package.json: $(dotmk)/typescript/package.json
 .SpaceVim.d/init.toml: $(dotmk)/typescript/.SpaceVim.d/init.toml
+.SpaceVim.d/coc-settings.json: $(dotmk)/typescript/.SpaceVim.d/coc-settings.json
 
 endif

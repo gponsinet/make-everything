@@ -9,8 +9,7 @@ include $(dotmk)/brew.mk
 	install.terraform
 
 install: install.terraform
-install.terraform: \
-	$(BREW_HOME)/Cellar/terraform
+install.terraform: brew(hashicorp/tap terraform)
 
 .IGNORE \
 .PHONY: \

@@ -4,30 +4,16 @@ docker.mk := $(dotmk)/docker.mk
 
 include $(dotmk)/dotmk.mk
 include $(dotmk)/brew.mk
-ifeq ($(CURDIR),$(HOME))
- include $(dotmk)/volta.mk
-else
- include $(dotmk)/npm.mk
-endif
+include $(dotmk)/volta.mk
 
-ifeq ($(CURDIR),$(HOME))
- export DOCKER_LANGSERVER_PATH := $(VOLTA_HOME)/bin/docker-langserver
-else
- export DOCKER_LANGSERVER_PATH := $(CURDIR)/node_modules/.bin/docker-langserver
-endif
+export DOCKER_LANGSERVER_PATH := $(VOLTA_HOME)/bin/docker-langserver
 
 .PHONY: \
 	install \
 	install.docker
 
 install: install.docker
-install.docker: $(BREW_CELLAR)/docker
-ifeq ($(CURDIR),$(HOME))
-install.docker:
-	volta install dockerfile-language-server-nodejs
-else
-install.docker: package.json
-endif
+install.docker: docker
 
 .IGNORE \
 .PHONY: \
@@ -43,9 +29,29 @@ clean.docker:
 	trash.docker
 
 trash: trash.docker
-trash.docker:
+trash.docker: ~docker
 
 package.json: $(dotmk)/docker/package.json
 .SpaceVim.d/init.toml: $(dotmk)/docker/.SpaceVim.d/init.toml
+
+.PHONY: docker
+docker: brew(docker) volta(dockerfile-language-server-nodejs)
+	@true
+
+.IGNORE \
+.PHONY: ~docker
+~docker: ~volta(dockerfile-language-server-nodejs)
+	@true
+
+.PHONY: docker(%)
+docker(%):
+	docker-compose build $*
+	docker-compose up -d $*
+	docker-compose logs $*
+
+.IGNORE \
+.PHONY: ~docker(%)
+~docker(%):
+	docker-compose down $*
 
 endif # docker.mk

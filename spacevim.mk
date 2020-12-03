@@ -21,7 +21,8 @@ spacevim: \
 	volta(bash-language-server) \
 	$(HOME)/.SpaceVim \
 	.SpaceVim.d/init.toml \
-	.SpaceVim.d/autoload/myspacevim.vim
+	.SpaceVim.d/autoload/myspacevim.vim \
+	.SpaceVim.d/coc-settings.json
 
 ~brew: ~spacevim
 ~nvim: ~spacevim
@@ -38,7 +39,7 @@ $(HOME)/.SpaceVim:
 	curl -sLf https://spacevim.org/install.sh | bash
 
 .SpaceVim.d/autoload/myspacevim.vim: $(dotmk)/spacevim/.SpaceVim.d/autoload/myspacevim.vim
-	[ -d $(dir $@) ] || mkdir -p $@
+	[ -d $(dir $@) ] || mkdir -p $(dir $@)
 	cp $< $@
 
 ifneq ($(CURDIR),$(HOME))
@@ -72,6 +73,15 @@ ifneq ($(CURDIR),$(HOME))
 endif
 # Override default config if init.toml was already present
 .SpaceVim.d/init.toml: $(CURDIR)/.SpaceVim.d/init.toml
+
+ifneq ($(CURDIR),$(HOME))
+$(HOME)/.SpaceVim.d/coc-settings.json:
+	touch $@
+endif
+
+.SpaceVim.d/coc-settings.json:
+	[ -f $@ ] || echo '{}' > $@
+	conflate $(foreach _,$^,-data $_) -data $@ --format JSON | sponge $@
 
 .gitignore: $(dotmk)/spacevim/.gitignore
 

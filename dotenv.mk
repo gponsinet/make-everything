@@ -10,6 +10,7 @@ endif
 $(shell \
 	cat .env \
 	| xargs -L1 echo \
+	| grep -v '^#' \
 	| sed 's,\$$[^{],$$$$,g' \
 	| sed 's,\(#\),\\\1,g' \
 	| sed 's,^,export ,' \
