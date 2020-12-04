@@ -1,0 +1,4 @@
+[[layers]]
+  name = "lang#rust"
+  recommended_style = true
+  format_on_save = true

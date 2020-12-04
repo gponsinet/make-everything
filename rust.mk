@@ -3,16 +3,13 @@ dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 rust.mk := $(dotmk)/rust.mk
 
 include $(dotmk)/dotmk.mk
-include $(dotmk)/helpers.mk
 include $(dotmk)/brew.mk
 
-rust.root := $(patsubst %/,%,$(or $(dir $(shell \
-	$(call find_up_first,Cargo.toml) \
-)),$(PWD)))
-rust.global := $(HOME)/.cargo
-rust.global.bin := $(rust.global)/bin
+export CARGO_HOME := $(HOME)/.caro
 
-export PATH := $(rust.global.bin):$(PATH)
+CARGO_HOME := $(HOME)/.cargo
+
+export PATH := $(CARGO_HOME)/bin:$(PATH)
 
 .PHONY: \
 	install \
@@ -20,19 +17,19 @@ export PATH := $(rust.global.bin):$(PATH)
 
 install: install.rust
 install.rust: \
-	$(HOME)/.cargo/bin/rustup \
-	$(rust.global.bin)/cross \
-	$(rust.root)/Cargo.toml
+	$(CARGO_HOME)/bin/rustup \
+	$(CARGO_HOME)/bin/cross \
+	Cargo.toml
 
-.PHONY: \
-	build \
-	build.rust
-
-build: build.rust
-build.rust: target ?=
-build.rust: verbose ?=
-build.rust: install.rust
-	cross build $(if $(target),--target=$(target)) $(if $(verbose),-vv)
+# .PHONY: \
+# 	build \
+# 	build.rust
+#
+# build: build.rust
+# build.rust: target ?=
+# build.rust: verbose ?=
+# build.rust: install.rust
+# 	cross build $(if $(target),--target=$(target)) $(if $(verbose),-vv)
 
 .IGNORE \
 .PHONY: \
@@ -52,13 +49,16 @@ trash: trash.rust
 trash.rust: clean.rust
 	rustup self uninstall
 
-$(HOME)/.cargo/bin/rustup: | $(BREW_HOME)/Cellar/curl
+$(CARGO_HOME)/bin/rustup: | $(BREW_HOME)/Cellar/curl
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-$(rust.root)/Cargo.toml: | $(HOME)/.cargo/bin/rustup
+Cargo.toml: | $(HOME)/.cargo/bin/rustup
 	cargo init
 
-$(rust.global.bin)/%: $(HOME)/.cargo/bin/rustup
-	cargo install %
+$(CARGO_HOME)/bin/%: $(HOME)/.cargo/bin/rustup
+	cargo install $*
+
+.SpaceVim.d/init.toml \
+	: %: $(dotmk)/rust/%
 
 endif # rust.mk
