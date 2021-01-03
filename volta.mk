@@ -22,23 +22,23 @@ volta: curl $(VOLTA_HOME)/bin/volta
 $(VOLTA_HOME)/bin/volta:
 	curl https://get.volta.sh | bash
 
-.PHONY: volta.%
-volta.%:
+.PHONY: volta+%
+volta+%:
 	volta list --format plain $* | grep '^package $*' || volta install $*
 
 .PHONY: volta(%)
 volta(%):
-	make $(foreach _,$*,volta.$_)
+	make $(foreach _,$*,volta+$_)
 
 .IGNORE \
-.PHONY: ~volta.%
-~volta.%:
+.PHONY: volta~%
+volta~%:
 	volta uninstall neovim || true
 
 .IGNORE \
 .PHONY: ~volta(%)
 ~volta(%):
-	make $(foreach _,$*,~volta.$_)
+	make $(foreach _,$*,volta~$_)
 
 # deprecated
 $(VOLTA_HOME)/bin/%:

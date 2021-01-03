@@ -30,9 +30,9 @@ install.brew: brew
 trash:
 trash.brew: ~brew
 
-.PHONY: brew brew.% brew(%)
+.PHONY: brew brew/% brew(%)
 .IGNORE \
-.PHONY: ~brew ~brew.% ~brew(%)
+.PHONY: brew ~~brew/% ~brew(%)
 
 .PHONY: brew
 brew: $(BREW_HOME)
@@ -40,10 +40,10 @@ brew: $(BREW_HOME)
 
 .PHONY: brew(%)
 brew(%):
-	make $(foreach _,$*,brew.$_)
+	make $(foreach _,$*,brew/$_)
 
-.PHONY: brew.%
-brew.%:
+.PHONY: brew/%
+brew/%:
 	(echo $* | grep '/' && make $(BREW_TAP)/$*) || make $(BREW_CELLAR)/$*
 
 .IGNORE .PHONY: ~brew
@@ -53,9 +53,10 @@ brew.%:
 
 .IGNORE .PHONY: ~brew(%)
 ~brew(%):
-	make $(foreach _,$*,brew.$_)
+	make $(foreach _,$*,~brew/$_)
 
-.IGNORE .PHONY: ~brew.%
+.IGNORE .PHONY: ~brew/%
+~brew/%:
 	(echo $* | grep '/' && brew untap $*) || brew uninstall $*
 
 $(BREW_HOME):

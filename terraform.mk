@@ -9,7 +9,7 @@ include $(dotmk)/brew.mk
 	install.terraform
 
 install: install.terraform
-install.terraform: brew(hashicorp/tap terraform)
+install.terraform: brew(hashicorp/tap terraform terraform-ls)
 
 .IGNORE \
 .PHONY: \
@@ -25,7 +25,8 @@ clean.terraform:
 	trash.terraform
 
 trash: trash.terraform
-trash.terraform:
-	brew uninstall terraform
+trash.terraform: ~brew(terraform terraform-ls)
+
+.SpaceVim.d/coc-settings.json: %: $(dotmk)/terraform/%
 
 endif # terraform.mk

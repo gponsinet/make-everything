@@ -37,5 +37,6 @@ trash.go:
 .SpaceVim.d/init.toml: | \
 	$(GOPATH)/src/github.com/jstemmer/gotags \
 	$(GOPATH)/src/github.com/sourcegraph/go-langserver
+.SpaceVim.d/coc-settings.json: $(dotmk)/go/.SpaceVim.d/coc-settings.json
 
 endif # go.mk

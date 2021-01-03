@@ -18,8 +18,9 @@ export PATH := $(CARGO_HOME)/bin:$(PATH)
 install: install.rust
 install.rust: \
 	$(CARGO_HOME)/bin/rustup \
-	$(CARGO_HOME)/bin/cross \
-	Cargo.toml
+	$(CARGO_HOME)/bin/cross
+	#	$(CARGO_HOME)/bin/racer
+	rustup component add rls rust-analysis rust-src
 
 # .PHONY: \
 # 	build \
@@ -52,13 +53,21 @@ trash.rust: clean.rust
 $(CARGO_HOME)/bin/rustup: | $(BREW_HOME)/Cellar/curl
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
+ifneq ($(CURDIR),$(HOME))
+install.rust: Cargo.toml
 Cargo.toml: | $(HOME)/.cargo/bin/rustup
 	cargo init
+endif
 
 $(CARGO_HOME)/bin/%: $(HOME)/.cargo/bin/rustup
 	cargo install $*
 
 .SpaceVim.d/init.toml \
+.SpaceVim.d/coc-settings.json \
 	: %: $(dotmk)/rust/%
+
+# $(CARGO_HOME)/bin/racer:
+# 	rustup toolchain add nightly
+# 	cargo +nightly install racer
 
 endif # rust.mk

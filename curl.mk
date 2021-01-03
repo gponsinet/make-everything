@@ -7,23 +7,26 @@ include $(dotmk)/dotmk.mk
 install: curl
 trash: ~curl
 
-.PHONY: curl curl.% curl(%)
+.PHONY: curl curl+% curl(%)
 .IGNORE \
-.PHONY: ~curl ~curl.% ~curl(%)
+.PHONY: curl ~curl~% ~curl(%)
 
 curl:
-	which curl | grep -v 'not found' || (echo "Please install curl before continue" || @false) 
+	which curl | grep -v 'not found' || (echo "Please install curl before continue" || @false)
 
 ~curl:
 	@true
 
-curl(%) ~curl(%):
-	make $(foreach _,$*,$@.$_)
+curl(%):
+	make $(foreach _,$*,curl+$_)
 
-curl.%:
+~curl(%):
+	make $(foreach _,$*,curl~$_)
+
+curl+%:
 	curl https://$*
 
-~curl.%:
+curl~%:
 	@true
 
 endif

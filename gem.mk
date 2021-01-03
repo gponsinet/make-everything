@@ -29,22 +29,22 @@ trash.ruby: ~gem
 ~gem:
 	@true
 
-.PHONY: gem.%
-gem.%:
+.PHONY: gem+%
+gem+%:
 	gem list -i "^$*$$" | grep true 1>/dev/null || gem install --force $*
 
 .PHONY: gem(%)
 gem(%):
-	make $(foreach _,$*,gem.$(_))
+	make $(foreach _,$*,gem+$(_))
 
 .IGNORE \
-.PHONY: gem.%
-~gem.%:
+.PHONY: gem+%
+gem~%:
 	gem list -i "^$*$$" | grep false || gem uninstall $*
 
 .IGNORE \
 .PHONY: ~gem(%)
 ~gem(%):
-	make $(foreach _,$*,~gem.$(_))
+	make $(foreach _,$*,gem~$(_))
 
 endif # gem.mk

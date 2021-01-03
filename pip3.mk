@@ -17,20 +17,20 @@ pip3: brew(python@3.9)
 
 .PHONY: pip3(%)
 pip3(%):
-	make $(foreach _,$*,pip3.$(_))
+	make $(foreach _,$*,pip3+$(_))
 
 IGNORE \
 .PHONY: ~pip3(%)
 ~pip3(%):
-	make $(foreach _,$*,~pip3.$(_))
+	make $(foreach _,$*,~pip3+$(_))
 
-.PHONY: pip3.%
-pip3.%:
+.PHONY: pip3+%
+pip3+%:
 	pip3 install --user --upgrade $*
 
 .IGNORE \
-.PHONY: ~pip3.%
-~pip3.%:
+.PHONY: ~pip3+%
+~pip3+%:
 	pip3 uninstall $*
 
 endif
