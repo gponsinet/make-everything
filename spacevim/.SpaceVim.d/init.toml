@@ -1,0 +1,63 @@
+# spacevim.mk
+
+[options]
+  automatic_update = true
+  buffer_index_type = 4.0
+  colorscheme = 'onedark'
+  colorscheme_bg = 'dark'
+  enable_guicolors = true
+  enable_statusline_mode = false
+  enable_tabline_filetype_icon = true
+  filetree_direction = 'left'
+  statusline_iseparator = 'arrow'
+  statusline_separator = 'arrow'
+  bootstrap_before = 'myspacevim#before'
+  bootstrap_after = 'myspacevim#after'
+  autocomplete_method = 'coc'
+
+[[custom_plugins]]
+  repo = 'lilydjwg/colorizer'
+  merged = false
+
+[[custom_plugins]]
+  repo = 'neoclide/coc.nvim'
+  merged = false
+
+[[layers]]
+  name = 'autocomplete'
+  auto-completion-return-key-behavior = 'complete'
+  auto-completion-tab-key-behavior = 'cycle'
+  auto_completion_delay = 50
+
+[[layers]]
+  name = 'shell'
+  default_height = 30.0
+  default_position = 'top'
+
+[[layers]]
+  name = 'format'
+  format_on_save = true
+
+[[layers]]
+  name = 'debug'
+
+[[layers]]
+  name = 'incsearch'
+
+[[layers]]
+  name = 'colorscheme'
+
+[[layers]]
+  name = 'ctrlp'
+
+[[layers]]
+  name = 'lang#markdown'
+
+[[layers]]
+  name = 'git'
+
+[[layers]]
+  name = 'lang#vim'
+
+[[layers]]
+  name = 'lang#python'

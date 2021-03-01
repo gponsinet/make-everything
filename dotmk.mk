@@ -46,7 +46,6 @@ endif
 !darwin(%) !darwin.%: linux(%) windows(%)
 	@true
 
-
 .PHONY: \
 	linux(%) linux.% \
 	!linux(%) !linux.% \
@@ -88,10 +87,18 @@ unix(%) unix.%: darwin(%) linux(%)
 print(%) print.%:
 	@echo $($*)
 
-.PHONY:
-install(%): unix(+brew(%)) windows(+choco(%))
+.PHONY: \
+	add(%) add.% \
+	+(%) +% \
+
+add(%) add.% +(%) +%: darwin(+brew(%)) linux(+brew(%)) windows(+choco(%))
 	@true
-uninstall(%): unix(-brew(%)) windows(-choco(%))
+
+.PHONY: \
+	del(%) del.% \
+	-(%) -% \
+
+del(%): unix(-brew(%)) windows(-choco(%))
 	@true
 
 endif # dotmk.mk

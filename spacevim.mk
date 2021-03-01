@@ -18,7 +18,7 @@ spacevim: \
 	brew \
 	nvim \
 	brew(msgpack global moreutils) \
-	volta(bash-language-server) \
+	volta(bash-language-server typescript) \
 	$(HOME)/.SpaceVim \
 	.SpaceVim.d/init.toml \
 	.SpaceVim.d/autoload/myspacevim.vim \
