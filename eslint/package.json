@@ -1,6 +1,6 @@
 {
   "devDependencies": {
     "eslint-cli": "^1.1.1",
-    "eslint_d": "^9.1.2"
+    "eslint_d": "^10.0.4"
   }
 }

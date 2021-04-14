@@ -81,7 +81,9 @@ endif
 
 .SpaceVim.d/coc-settings.json:
 	[ -f $@ ] || echo '{}' > $@
+	conflate -data $@ --format JSON | grep -v "Could not unmarshal" || echo "{}" > $@
 	conflate $(foreach _,$^,-data $_) -data $@ --format JSON | sponge $@
+	conflate -data $@ --format JSON
 
 .gitignore: $(dotmk)/spacevim/.gitignore
 

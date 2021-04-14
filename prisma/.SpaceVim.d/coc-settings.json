@@ -1,0 +1,13 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": [
+    "prisma"
+  ],
+  "languageserver": {
+    "prisma": {
+      "command": "prisma-language-server",
+      "filetypes": [
+        "prisma"
+      ]
+    }
+  }
+}

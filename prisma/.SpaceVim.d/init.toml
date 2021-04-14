@@ -1,0 +1,3 @@
+[[custom_plugins]]
+  repo = "pantharshit00/vim-prisma"
+  merged = true

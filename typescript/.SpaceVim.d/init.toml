@@ -1,9 +1,9 @@
 # typescript.mk
 
-# [[layers]]
-#   name = "lang#typescript"
-#   typescript_server_path = "$TYPESCRIPT_SERVER_PATH"
+[[layers]]
+  name = "lang#typescript"
+  typescript_server_path = "$TYPESCRIPT_SERVER_PATH"
 
-# [[layers]]
-#   name = "lsp"
-#   filetypes = ["typescript"]
+[[layers]]
+  name = "lsp"
+  filetypes = ["typescript"]

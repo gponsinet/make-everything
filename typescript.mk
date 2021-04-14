@@ -18,7 +18,7 @@ endif
 	install.volta
 
 install: install.typescript
-install.typescript: volta(typescript typescript-language-server typescript-deno-plugin)
+install.typescript: volta(typescript typescript-language-server)
 ifneq ($(CURDIR),$(HOME))
 install.typescript: package.json tsconfig.json
 endif

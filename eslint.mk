@@ -9,10 +9,10 @@ include $(dotmk)/volta.mk
 	install \
 	install.eslint
 
-install: install.eslint 
+install: install.eslint
 ifeq ($(CURDIR),$(HOME))
 install.eslint:
-	volta install eslint-cli@latest	
+	volta install eslint-cli@latest eslint_d@latest
 else
 install.eslint: package.json
 endif

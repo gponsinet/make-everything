@@ -24,7 +24,8 @@ $(VOLTA_HOME)/bin/volta:
 
 .PHONY: volta+%
 volta+%:
-	volta list --format plain $* | grep '^package $*' || volta install $*
+	$(eval 1 := $(subst +,/,$*))
+	volta list --format plain $1 | grep '^package $1' || volta install $1
 
 .PHONY: volta(%)
 volta(%):

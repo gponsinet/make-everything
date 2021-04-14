@@ -2,6 +2,8 @@ ifndef dotmk.mk
 dotmk ?= $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 dotmk.mk := $(dotmk)/dotmk.mk
 
+.SECONDEXPANSION:
+
 SHELL := bash
 
 .SHELLFLAGS := -eu -o pipefail -c
